@@ -31,12 +31,11 @@ class PemakaianLab extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'kode_lab', 'nama_lab', 'mata_kuliah'], 'required'],
+            [['id', 'nama_pengguna', 'nama_lab', 'mata_kuliah', 'date'], 'required'],
             [['id'], 'integer'],
             // [['waktu_mulai', 'waktu_selesai'], 'safe'],
-            [['kode_lab'], 'string', 'max' => 4],
-            [['nama_lab'], 'string', 'max' => 255],
-            [['id'], 'unique'],
+            [['nama_lab', 'nama_pengguna'], 'string', 'max' => 255],
+            [['date'], 'safe'],
         ];
     }
 
@@ -48,9 +47,10 @@ class PemakaianLab extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             // 'id_mhs' => 'id mahasiswa',
-            'kode_lab' => 'Kode Laboratorium',
+            'nama_pengguna' => 'Nama Pengguna',
             'nama_lab' => 'Nama Laboratorium',
             'mata_kuliah' => 'Mata Kuliah',
+            'date' => 'Tanggal',
             // 'waktu_mulai' => 'Waktu Mulai',
             // 'waktu_selesai' => 'Waktu Selesai',
             // 'keterangan' => 'Keterangan',
@@ -60,4 +60,6 @@ class PemakaianLab extends \yii\db\ActiveRecord
     {
         return static::find()->count();
     }
+
+
 }

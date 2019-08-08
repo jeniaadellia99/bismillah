@@ -18,14 +18,14 @@ class PemakaianLabSearch extends PemakaianLab
     {
         return [
             [['id'], 'integer'],
-            [['kode_lab', 'nama_lab', 'mata_kuliah'], 'safe'],
+            [['nama_pengguna', 'nama_lab', 'mata_kuliah', 'date'], 'safe'],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
+     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
@@ -38,6 +38,25 @@ class PemakaianLabSearch extends PemakaianLab
      *
      * @return ActiveDataProvider
      */
+    public function getQuerySearch($params)
+    {
+        $query = PemakaianLabSearch::find();
+
+        $this->load($params);
+
+        // add conditions that should always apply here
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'nama_pengguna' => $this->nama_pengguna,
+            'nama_lab' => $this->nama_lab,
+            'mata_kuliah' => $this->mata_kuliah,
+            'date' => $this->date,
+        ]);
+
+        return $query;
+    }
     public function search($params)
     {
         $query = PemakaianLab::find();
@@ -59,14 +78,16 @@ class PemakaianLabSearch extends PemakaianLab
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-           
         ]);
 
-        $query->andFilterWhere(['like', 'kode_lab', $this->kode_lab])
-            ->andFilterWhere(['like', 'nama_lab', $this->nama_lab])
-            ->andFilterWhere(['like', 'mata_kuliah', $this->mata_kuliah]);
-            // ->andFilterWhere(['like', 'keterangan', $this->keterangan]);
+        $query->andFilterWhere(['like', 'nama_pengguna', $this->nama_pengguna])
+                ->andFilterWhere(['like', 'nama_lab', $this->nama_lab])
+            ->andFilterWhere(['like', 'mata_kuliah', $this->mata_kuliah])
+            ->andFilterWhere(['like', 'date', $this->date]);
 
         return $dataProvider;
     }
+
 }
+
+

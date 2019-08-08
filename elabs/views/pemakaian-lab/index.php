@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use kartik\date\DatePicker;
+use app\components\Helper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\PemakaianLabSearch */
@@ -13,7 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="pemakaian-lab-index box box-primary">
 
    <div class="box-header">
-     <!--    <?= Html::a('Tambah Data Penduduk', ['create'], ['class' => 'btn btn-success']) ?> -->
+    
+    <?= Html::a('<i class="fa fa-print"></i> Export Pdf', Yii::$app->request->url.'&export-pdf=1', ['class' => 'btn btn-danger btn-flat','target' => '_blank']) ?> 
+    <?= Html::a('<i class="fa fa-print"></i> Export Excel', Yii::$app->request->url.'&export-excel=1', ['class' => 'btn btn-warning btn-flat','target' => '_blank']) ?>
        
     </div>
 
@@ -27,12 +31,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['style' => 'text-align:center'],
                 'contentOptions' => ['style' => 'text-align:center']
             ],
-            //   [
-            //     'attribute' => 'id_mhs',
-            //     'headerOptions' => ['style' => 'text-align:center'],
-            // ],
             [
-                'attribute' => 'kode_lab',
+                'attribute' => 'nama_pengguna',
                 'headerOptions' => ['style' => 'text-align:center'],
             ],
 
@@ -44,16 +44,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'mata_kuliah',
                 'headerOptions' => ['style' => 'text-align:center'],
             ],
-            // [
-            //     'attribute' => 'waktu_mulai',
-            //     'headerOptions' => ['style' => 'text-align:center'],
-            // ],
-           
-            // [
-            //     'attribute' => 'waktu_selesai',
-            //     'headerOptions' => ['style' => 'text-align:center'],
-            // ],
-            // //'keterangan',
+             [
+                'attribute' => 'date',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return Helper::getTanggalSingkat($data->date);
+                },
+                'headerOptions' => ['style' => 'text-align:center; width:100px'],
+                'contentOptions' => ['style' => 'text-align:center;'],
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

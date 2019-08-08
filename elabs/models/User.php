@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Html;
 
 /**
  * This is the model class for table "user".
@@ -11,6 +12,8 @@ use Yii;
  * @property string $username
  * @property string $password
  * @property int $id_mhs
+ * @property int $id_user_role
+ * @property string $token
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
@@ -28,10 +31,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['id', 'username', 'password', 'id_mhs', 'id_user_role'], 'required'],
+            [['username', 'password', 'id_mhs', 'id_user_role', 'token'], 'required'],
             [['id', 'id_mhs', 'id_user_role'], 'integer'],
-            [['username'], 'string', 'max' => 255],
-            [['password'], 'string', 'max' => 255],
+            [['username', 'password'], 'string', 'max' => 255],
+            [['token'], 'string', 'max' => 50],
+            [['id'], 'unique'],
         ];
     }
 
@@ -44,78 +48,120 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'id' => 'ID',
             'username' => 'Username',
             'password' => 'Password',
-            'id_mhs' => 'Id Mhs',
-            'id_user_role' => 'Id User Role'
+            'id_mhs' => 'Mahasiswa',
+            'id_user_role' => 'User Role',
+            'token' => 'Token',
         ];
     }
 
-     public static function findIdentity($id)
+    // Cunstom sendiri interface.
+    public static function findIdentity($id)
     {
         return self::findOne($id);
     }
 
-    public static function findIdentityByAccessToken($token, $Type = null)
+    public static function findIdentityByAccessToken($token, $type = null)
     {
         return static::findOne(['access_token' => $token]);
     }
+
     public function getId()
     {
         return $this->id;
     }
+
     public function getAuthKey()
     {
         return null;
     }
+
     public function validateAuthKey($authKey)
     {
         return $this->authKey === $authKey;
     }
 
-
-    public function findByUsername($username)
+    public static function findByUsername($username)
     {
         return self::findOne(['username' => $username]);
     }
+
     public function validatePassword($password)
     {
+        //return $this->password == $password;
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
-
-        // cek password
-         // return $password == $this->password;
     }
-     // CEK LOGIN USER
-    public static function isAdmin()
+
+     public static function isAdmin()
     {
+        // Jika bila user login trs keluar dan user terus masuk lewat url itu tidak bisa maka balik ke login.
         if (Yii::$app->user->isGuest) {
+           return false;
+        }
+
+        // Buat id akses login user
+        if (($user = User::findOne(Yii::$app->user->identity->id_user_role == 1))) {
+            return $user;
+        } else {
             return false;
         }
-        $model = User::findOne(['username'=> Yii::$app->user->identity->username]);
-        if ($model == null) {
-            return false;
-        }elseif ($model->id_user_role == 1) {
-            return true;
-        }
-            return false;
     }
 
     public static function isMhs()
     {
+        // Jika bila user login trs keluar dan user terus masuk lewat url itu tidak bisa maka balik ke login.
         if (Yii::$app->user->isGuest) {
+           return false;
+        }
+
+        // Buat id akses login user
+        if (($user = User::findOne(Yii::$app->user->identity->id_user_role == 2))) {
+            return $user;
+        } else {
             return false;
         }
-        $model = User::findOne(['username'=> Yii::$app->user->identity->username]);
-        if ($model == null) {
-            return false;
-        }elseif ($model->id_user_role == 2) {
-            return true;
-        }
-            return false;
     }
 
-    public static function actionHash()
+    public static function getFotoAdmin($htmlOptions=[])
     {
-        $mhs=Yii::$app->getSecurity()->generatePasswordHash("mhs123");
-        echo $mhs;
+        return Html::img('@web/img/polindra.png', $htmlOptions);
+    }
+
+    public static function getFotoMhs($htmlOptions=[])
+    {
+        $query = Mhs::find()
+            ->andWhere(['id' => Yii::$app->user->identity->id_mhs])
+            ->one();
+
+        if ($query->foto != null) {
+            return Html::img('@web/upload/mhs/' . $query->foto, $htmlOptions);
+        } else {
+            return Html::img('@web/foto/no-images.png', $htmlOptions);
+        }
+    }
+
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+        }
+        return true;
+    }
+
+    public function getMhs()
+    {
+        return $this->hasOne(Mhs::className(), ['id' => 'id_mhs']);
+    }
+
+    public function getUserRole()
+    {
+        $model = UserRole::findOne($this->id_user_role);
+
+        if ($model !== null) {
+            return $model->nama;
+        } else {
+            return null;
+        }
     }
 
 }

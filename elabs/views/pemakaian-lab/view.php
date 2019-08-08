@@ -6,14 +6,13 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\PemakaianLab */
 
-$this->title = $model->id;
+$this->title = "Nama Pengguna: "$model->nama_pengguna;
 $this->params['breadcrumbs'][] = ['label' => 'Pemakaian Labs', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="pemakaian-lab-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="pemakaian-lab-view box box-primary">
+      <div class="box-body">
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -29,13 +28,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'kode_lab',
+            
+            'nama_pengguna',
             'nama_lab',
             'mata_kuliah',
-            'waktu_mulai',
-            'waktu_selesai',
-            'keterangan',
+            'date',
         ],
     ]) ?>
 

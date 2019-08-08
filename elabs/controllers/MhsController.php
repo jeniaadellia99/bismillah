@@ -8,9 +8,9 @@ use app\models\MhsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use app\models\User;
 use yii\web\UploadedFile;
-
+use yii\web\Response;
 /**
  * MhsController implements the CRUD actions for Mhs model.
  */
@@ -68,18 +68,26 @@ class MhsController extends Controller
     {
         $model = new Mhs();
 
-          if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $foto = UploadedFile::getInstance($model,'foto');
-            
-            $model->foto = time().'_'.$foto->name;
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $foto = UploadedFile::getInstance($model, 'foto');
+            $model->foto = time(). '_' . $foto->name;
+            $foto->saveAs(Yii::$app->basePath . '/web/upload/mhs/' . $model->foto);
+            $model->save();
 
-            $model->save(false);
-
-            $foto->saveAs(Yii::$app->basePath.'/web/upload/'.$model->foto);
+            $user = new User();
+            $user->username = $model->nama;
+            $user->password = $model->nim;
+            $user->id_user_role = 2;
+            $user->id_mhs = $model->id;
             
+            $token =  $user->token = Yii::$app->getSecurity()->generateRandomString ( $length = 50 );
+
+            $user->save();
 
             return $this->redirect(['view', 'id' => $model->id]);
         }
+
+
 
         return $this->render('create', [
             'model' => $model,
@@ -97,7 +105,39 @@ class MhsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        // Membuat validasi untuk di from tertentu yang sudah ada di databases tidak bisa dibuat kembali.
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        // Mengambi data lama di databases
+        $foto_lama = $model->foto;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            
+            // Mengambil data baru di layout _from
+            $foto = UploadedFile::getInstance($model, 'foto');
+
+            // Jika ada data file yang dirubah maka data lama akan di hapus dan di ganti dengan data baru yang sudah diambil jika tidak ada data yang dirubah maka file akan langsung save data-data yang lama.
+            if ($foto !== null) {
+                unlink(Yii::$app->basePath . '/web/upload/mhs/' . $foto_lama);
+                $model->foto = time() . '_' . $foto->name;
+                $foto->saveAs(Yii::$app->basePath . '/web/upload/mhs/' . $model->foto);
+            } else {
+                $model->foto = $foto_lama;
+            }
+
+            // Simapan data ke databases
+            $model->save(false);
+
+            // Menuju ke view id yang data dibuat.
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
