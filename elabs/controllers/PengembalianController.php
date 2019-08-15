@@ -3,19 +3,20 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Peminjaman;
-use app\models\PeminjamanSearch;
+use app\models\Pengembalian;
+use app\models\PengembalianSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\User;
-use app\models\InventarisBrg;
-use app\models\DetailPinjam;
+use app\models\PeminjamanSearch;
+use app\models\Peminjaman;
+use yii\filters\AccessControl;
 
 /**
  * PeminjamanController implements the CRUD actions for Peminjaman model.
  */
-class PeminjamanController extends Controller
+class PengembalianController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -23,6 +24,24 @@ class PeminjamanController extends Controller
     public function behaviors()
     {
         return [
+
+            // Access Control URL.
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['update', 'view', 'delete'],
+                        'allow' => User::isAdmin(),
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['index', 'kembalikan-buku'],
+                        'allow' => User::isMhs(),
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -31,7 +50,6 @@ class PeminjamanController extends Controller
             ],
         ];
     }
-
     /**
      * Lists all Peminjaman models.
      * @return mixed
@@ -65,39 +83,24 @@ class PeminjamanController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($id_mhs=null)
+    public function actionCreate()
     {
-        $model = new DetailPinjam();
-        $model->id_detail_pinjam = $model->id_detail_pinjam;
-        $model->save();
         $model = new Peminjaman();
-        $model->id_mhs = $id_mhs;
-
-
-
-
-        // $model = InventarisBrg(['jumlah_brg']);
-        // $inventaris_brg = InventarisBrg();
-        // $inventaris_brg->jumlah_brg = $model->id_inventaris_brg;
-        // if ($inventaris_brg==0) {
-        //   return $this->redirect(Yii::$app->session->setFlash('error', "barang tidak ada"));
-        // }
-       
         if (User::isMhs()) {
-           
             $model->id_mhs = Yii::$app->user->identity->id_mhs;
             $model->status = '1';
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-               return $this->redirect(['view', 'id' => $model->id_mhs]);
-            }
+                
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
         }
         elseif (User::isAdmin()) {
-           
-            $model->status = '2';
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
-            }
         }
+    }
+
+    
 
         return $this->render('create', [
             'model' => $model,
@@ -153,37 +156,41 @@ class PeminjamanController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-    public function actionAccBarang($id=null)
-    {
-        $model = Peminjaman::findOne($id);
-        
-        $model->status = 2;
-
-          $model->save(false);
-
-        Yii::$app->session->setFlash('Berhasil', 'Barang sudah boleh dipinjam');
-
-        if (User::isAdmin()) {
-            return $this->redirect(Yii::$app->request->referrer);
-        } else {
-            return $this->redirect(['peminjaman/index']);
-        }
-    }
-     public function actionKembalikanBarang($id=null)
+    public function KembalikanBarang($value='')
     {
         $model = Peminjaman::findOne($id);
         $model->tgl_kembali = date('Y-m-d');
         
-        $model->status = 3;
+        $model->status = 4;
 
           $model->save(false);
 
-           Yii::$app->session->setFlash('Berhasil', 'Barang sudah berhasil di kembalikan');
+           Yii::$app->session->setFlash('Berhasil', 'Buku sudah berhasil di kembalikan');
 
-        if (User::isAdmin()|| User::isMhs()) {
+        if (User::isMhs()) {
             return $this->redirect(Yii::$app->request->referrer);
         } else {
-            return $this->redirect(['peminjaman/index']);
+            return $this->redirect(['pengembalian/index']);
         }
+    }
+    public function actionCekStatus()
+    {
+        $query = Peminjaman::find()
+            ->andWhere(['<','tgl_pinjam',date('Y-m-d')])
+            ->andWhere(['tgl_kembali' => null])
+            ->all();
+
+        /*
+        $query = Peminjaman::find()
+            ->andWhere(['tanggal_kembali' => date('Y-m-d')])
+            ->all();
+        */
+
+        foreach ($query as $peminjaman) {
+            $peminjaman->status= Peminjaman::DIKEMBALIKAN;
+            $peminjaman->save();
+        }
+
+        // return $this->goBack();
     }
 }

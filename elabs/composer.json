@@ -26,7 +26,8 @@
         "kartik-v/yii2-widget-datepicker": "@dev",
         "kartik-v/yii2-mpdf": "^1.0",
         "phpoffice/phpspreadsheet": "^1.8",
-        "miloschuman/yii2-highcharts-widget": "^7.0"
+        "miloschuman/yii2-highcharts-widget": "^7.0",
+        "2amigos/yii2-multi-select-widget": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -32,10 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
              [
-            'attribute' => 'id_inventaris_brg',
-            'value' => $model->inventarisBrg->nama_brg,
-            ],
-             [
             'attribute' => 'id_dosen_staf',
             'value' => $model->dosenStaf->nama,
             ],
@@ -47,13 +43,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=> 'Status',
                 'value' =>function ($model){
                     if ($model->status == 1) {
-                      return Html::a('<class="label label-danger"> label => "menunggu verifikasi"');
+                      return  "menunggu verifikasi";
                     };
                     if ($model->status == 2) {
-                        return "Approved";
+                        return "sedang dipinjam";
                     };
                     if ($model->status == 3) {
-                        return "Denied";
+                        return "sudah dibalikan";
                     };
                 }
             ],
@@ -65,16 +61,51 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Helper::getTanggalSingkat($data->tgl_pinjam);
                 },
             ],
-            [
+            // [
 
-                'attribute' => 'tgl_kembali',
-                'format' => 'raw',
-                'value' => function($data) {
-                    return Helper::getTanggalSingkat($data->tgl_kembali);
-                },
-            ],
+            //     'attribute' => 'tgl_kembali',
+            //     'format' => 'raw',
+            //     'value' => function($data) {
+            //         return Helper::getTanggalSingkat($data->tgl_kembali);
+            //     },
+            // ],
             'keterangan',
+
+            [
+                'label'=>'pilih barang',
+                'format' => 'raw',
+                'value' =>  Html::a(' Pilih barang', ['detail-pinjam/create/','id_pinjam' => $model->id], ['class' => 'btn btn-warning btn-flat']) 
+            ],
         ],
     ]) ?>
 
 </div>
+
+<div>&nbsp;</div>
+
+<div class="box box-primary">
+
+    <div class="box-header">
+        <h3 class="box-title">Daftar Barang yang terkait.</h3>
+    </div>
+    
+    <div class="box-body">
+
+        <?= Html::a('<i class="fa fa-plus"> Tambah Peminjaman</i>', ['detail-pinjam/create', 'id_pinjam' => $model->id], ['class' => 'btn btn-success']) ?>
+        <div>&nbsp;</div>
+          <table class="table">
+            <tr>
+                <th>No</th>
+                <th>Nama Barang</th>
+                <th>&nbsp;</th>
+            </tr>
+            <?php $no=1; ?>
+            <?php $semuaPeminjaman = $model->findAllDetailPinjam(); ?>
+            <?php foreach ($semuaPeminjaman as $peminjaman): ?>
+            <tr>
+                <td><?= $no++; ?></td>
+                <td><?= $detail_pinjam->id_pinjam ?></td>
+                
+            </tr>
+            <?php $no++; endforeach ?>
+        </table>

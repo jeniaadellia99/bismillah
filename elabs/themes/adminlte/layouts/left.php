@@ -86,16 +86,18 @@ use app\models\User;
 
     <?php ?>
      <?php } elseif (User::isMhs()) { ?>
-
          <?= dmstr\widgets\Menu::widget(
             [
                 'options' => ['class' => 'sidebar-menu tree', 'data-widget'=> 'tree'],
                 'items' => [
                     ['label' => '', 'options' => ['class' => 'header']],
                     ['label' => 'home', 'icon' => 'home', 'url' => ['site/dashboard'],],
+                    ['label' => 'Biodata', 'icon' => 'tty', 'url' => ['mhs/view'],],
                     ['label' => '', 'options' => ['class' => 'header']],
-                    ['label' => 'form peminjaman', 'icon' => 'pencil-square-o', 'url' => ['peminjaman/create'],],
+                    // ['label' => 'form peminjaman', 'icon' => 'pencil-square-o', 'url' => ['peminjaman/create'],],
+                    ['label' => 'form peminjaman', 'icon' => 'pencil-square-o', 'url' => ['mhs/index'],],
                     ['label' => 'Peminjaman', 'icon' => 'pencil-square-o', 'url' => ['peminjaman/index'],],
+                    // ['label' => 'Pengembalian', 'icon' => 'pencil-square-o', 'url' => ['pengembalian/index'],],
            
                 ],
             ]

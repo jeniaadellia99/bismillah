@@ -68,4 +68,16 @@ class Mhs extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ['id_mhs' => 'id']);
     }
+
+     public function getInventarisBrg()
+    {
+        return $this->hasOne(InventarisBrg::class, ['id_inventaris_brg' => 'id']);
+    }
+
+    public function findAllPeminjaman()
+    {
+        return Peminjaman::find()
+            ->andWhere(['id_mhs' => $this->id])
+            ->all();
+    }
 }

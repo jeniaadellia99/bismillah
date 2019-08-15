@@ -140,6 +140,46 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
 
+         <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        Daftar Peminjaman belum komfirmasi
+                    </h3>
+                </div>
+                <div class="box-body table no-padding">
+                    <table class="table table-bordered table-stripped">
+                        <thead class="">
+                            <tr>
+                                <th width="55px" class="text-center" rowspan="2">NO</th>
+                                <th class="text-center" rowspan="2">Nama Peminjam</th>
+                                 <th class="text-center" rowspan="2">Barang</th>
+                                <th class="text-center" rowspan="2">tanggal pinjam</th>
+                                <th class="text-center" rowspan="2">Aksi</th>
+                            </tr>
+                </thead>
+                  <tbody>
+                            <?php $i = 1?>
+                            <?php foreach (Peminjaman::find()->andWhere(['status' => 1])->orderBy(['tgl_pinjam' =>  SORT_DESC])->limit(10)->all() as $peminjam): ?>
+                            <tr>
+                                <td class="text-center"><?= $i++ ?></td>
+                                <td class="text-center"><?= $peminjam->mhs->nama ?></td>
+                                <td class="text-center"><?= $peminjam->inventarisBrg->nama_brg ?></td>
+                                <td class="text-center"><?= $peminjam->tgl_pinjam ?></td>
+                                <td class="text-center"><?= Html::a('<i class="fa fa-check-square-o">Konfirmasi</i>', ['peminjaman/acc-barang', 'id' => $peminjam->id], ['data' => ['confirm' => 'Apa anda yakin ingin menyutujui peminjaman ini?'],]); ?>
+                                </td>
+                            </tr>
+                            <?php endforeach ?>
+                        </tbody>
+
+                       
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     </div>
 
 <?php endif ?>
@@ -182,8 +222,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     <center>
                         <img style="height: 300px" class="img-responsive pad" src="<?= Yii::$app->request->baseUrl.'/upload/barang/'.$inventarisBrg['foto']; ?>" alt="Photo">
                     </center>
-                    <?= Html::a("<i class='fa fa-eye'> Detail Barang</i>",["inventaris_brg/view","id"=>$inventarisBrg->id],['class' => 'btn btn-default']) ?>
-                    <?= Html::a('<i class="fa fa-file"> Pinjam Barang</i>', ['peminjaman/create', 'id_brg' => $inventarisBrg->id], ['class' => 'btn btn-primary',
+                    <?= Html::a("<i class='fa fa-eye'> Detail Barang</i>",['inventaris-brg/view','id'=>$inventarisBrg->id],['class' => 'btn btn-default']) ?>
+                    <?= Html::a('<i class="fa fa-file"> Pinjam Barang</i>', ['peminjaman/create', 'id_iventaris_brg' => $inventarisBrg->id], ['class' => 'btn btn-primary',
                         'data' => [
                             'confirm' => 'Do you want to borrow it?',
                         ],

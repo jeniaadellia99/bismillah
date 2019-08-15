@@ -38,25 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'text-align:center']
             ],
              [
-               'attribute' =>'id_dosen_staf',
-               'filter' => DosenStaf::getList(),
-               'headerOptions' => ['style' => 'text-align:center;'],
-               'contentOptions' => ['style' => 'text-align:center'],
-               'value' => function($data){
-                return @$data->dosenStaf->nama;
-               }
-           ],
-             [
-               'attribute' =>'id_inventaris_brg',
-               'filter' => InventarisBrg::getList(),
-               'headerOptions' => ['style' => 'text-align:center;'],
-               'contentOptions' => ['style' => 'text-align:center'],
-               'value' => function($data){
-                return @$data->inventarisBrg->nama_brg;
-               }
-           ],
-
-            [
                'attribute' =>'id_mhs',
                'filter' => Mhs::getList(),
                'headerOptions' => ['style' => 'text-align:center;'],
@@ -65,6 +46,26 @@ $this->params['breadcrumbs'][] = $this->title;
                 return @$data->mhs->nama;
                }
            ],
+            [
+               'attribute' =>'id_dosen_staf',
+               'filter' => DosenStaf::getList(),
+               'headerOptions' => ['style' => 'text-align:center;'],
+               'contentOptions' => ['style' => 'text-align:center'],
+               'value' => function($data){
+                return @$data->dosenStaf->nama;
+               }
+           ],
+           //   [
+           //     'attribute' =>'id_inventaris_brg',
+           //     'filter' => InventarisBrg::getList(),
+           //     'headerOptions' => ['style' => 'text-align:center;'],
+           //     'contentOptions' => ['style' => 'text-align:center'],
+           //     'value' => function($data){
+           //      return @$data->inventarisBrg->nama_brg;
+           //     }
+           // ],
+
+           
             [
                 'attribute' => 'tgl_pinjam',
                 'format' => 'raw',
@@ -88,21 +89,28 @@ $this->params['breadcrumbs'][] = $this->title;
                                 return "menunggu verifikasi";
                             };
                             if ($model->status == 2) {
-                                return "Approved";
+                                return "sedang di pinjam";
                             };
                             if ($model->status == 3) {
-                                return "Denied";
+                                return "sudah dibalikan";
                             };
                         },
                         'filter'=>[
                             1 => 'menunggu verifikasi',
-                            2 => 'Approved',
-                            3 => 'Denied',
+                            2 => 'sedang dipinjam',
+                            3 => 'sudah dibalikan',
                         ],
                     ],
             'keterangan',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                        'class' => 'yii\grid\ActionColumn',
+                        'template' => '{view} {update} {kembalikan} {delete}',
+                        'buttons' => [
+                            'kembalikan' => function($url, $model, $key) {
+                                return Html::a('<i class="fa fa-check-square-o"></i>', ['acc-barang', 'id' => $model->id], ['data' => ['confirm' => 'Apa anda yakin ingin memberi barang ini?'],]);
+                            }
+                        ]
+                    ],
         ],
     ]); ?>
 <?php endif ?>
@@ -168,19 +176,29 @@ $this->params['breadcrumbs'][] = $this->title;
                                 return "menunggu verifikasi";
                             };
                             if ($model->status == 2) {
-                                return "Approved";
+                                return "sedang di pinjam";
                             };
                             if ($model->status == 3) {
-                                return "Denied";
+                                return "sudah dibalikan";
                             };
                         },
                         'filter'=>[
                             1 => 'menunggu verifikasi',
-                            2 => 'Approved',
-                            3 => 'Denied',
+                            2 => 'sedang dipinjam',
+                            3 => 'sudah dibalikan',
                         ],
                     ],
             'keterangan',
+            [
+                        'class' => 'yii\grid\ActionColumn',
+                        'template' => '{view}{kembalikan}',
+                        'buttons' => [
+                            'kembalikan' => function($url, $model, $key) {
+                                return Html::a('<i class="fa fa-check-square-o"></i>', ['kembalikan-barang', 'id' => $model->id], ['data' => ['confirm' => 'Apa anda yakin ingin mengembalikan barang ini?'],]);
+                            }
+                        ]
+                    ],
+
         ],
     ]); ?>
 

@@ -16,7 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="mhs-view box box-primary">
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php if (User::isAdmin()): ?>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
@@ -37,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'id_jurusan',
             'value' => @$model->jurusan->nama,
             ],
+            'nim',
              [
               'attribute' => 'foto',
               'format' =>'raw',
@@ -48,8 +48,45 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
               },
             ],
-            'nim',
+           
         ],
     ]) ?>
+
+</div>
+
+<div>&nbsp;</div>
+
+<div class="box box-primary">
+
+    <div class="box-header">
+        <h3 class="box-title">Daftar Barang yang terkait.</h3>
+    </div>
+    
+    <div class="box-body">
+
+        <?= Html::a('<i class="fa fa-plus"> Tambah Peminjaman</i>', ['peminjaman/create', 'id_mhs' => $model->id], ['class' => 'btn btn-success']) ?>
+        <div>&nbsp;</div>
+
+        <table class="table">
+            <tr>
+                <th>No</th>
+                <th>Nama Barang</th>
+                <th>&nbsp;</th>
+            </tr>
+            <?php $no=1; ?>
+            <?php $semuaPeminjaman = $model->findAllPeminjaman(); ?>
+            <?php foreach ($semuaPeminjaman as $peminjaman): ?>
+            <tr>
+                <td><?= $no++; ?></td>
+                <td><?= Html::a($peminjaman->inventarisBrg->nama_brg, ['peminjaman/view', 'id' => $peminjaman->id]); ?></td>
+                <td>
+                    <?= Html::a("<i class='fa fa-pencil'> Edit</i>",["buku/update","id"=>$peminjaman->id],['class' => 'btn btn-primary']) ?>&nbsp;
+                    <?= Html::a("<i class='fa fa-trash'> Hapus</i>",["buku/delete","id"=>$peminjaman->id],['class' => 'btn btn-danger', 'data-method' => 'post', 'data-confirm' => 'Yakin hapus data ini?']) ?>&nbsp;
+                </td>
+            </tr>
+            <?php $no++; endforeach ?>
+        </table>
+
+    </div>
 
 </div>

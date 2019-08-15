@@ -63,8 +63,6 @@ use app\models\KategoriBrg;
         ],
     ]); ?>
 
-    <?= $form->field($model, 'kode_brg')->textInput(['maxlength' => true]) ?>
-
      </div>
     <div class="box-footer">
         <div class="col-sm-offset-2 col-sm-3">
@@ -73,18 +71,25 @@ use app\models\KategoriBrg;
     </div>
 </div>
 
-
     <?php ActiveForm::end(); ?>
 
-<script type="text/javascript" id="scan">
-    $(document).on('keypress', '.scan',function (e) {
-        console.log('barcode_sparepart_code on keypress');
-        if (e.keyCode==13) {
-            e.preventDefault();
-        }
-    })
-</script>
 
+
+<script type="text/javascript">
+    // $(document).on('keypress', '#scan',function (e) {
+    //     console.log('barcode_sparepart_code on keypress');
+    //     if (e.keyCode==13) {
+    //         e.preventDefault();
+    //     }
+    // })
+    $("#scan").keypress(function(event){
+    if (event.which == '10' || event.which == '13') {
+        event.preventDefault();
+    }
+});
+
+</script>
+<!-- 
 <input id="scan" type="text" autocomplete="off">
  <input id="send" type="submit" value="Send">
 
@@ -120,3 +125,4 @@ sendEl.click(function(e) { // menangkap event 'on click'
   panggilFunction(message);
 
 });
+ -->

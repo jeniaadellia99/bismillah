@@ -12,7 +12,7 @@ use Yii;
  * @property int $id_mhs
  * @property string $keterangan
  */
-class Peminjaman extends \yii\db\ActiveRecord
+class Pengembalian extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -28,8 +28,8 @@ class Peminjaman extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_dosen_staf', 'id_mhs', 'keterangan', 'status', 'tgl_pinjam'], 'required'],
-            [['id_dosen_staf', 'id_inventaris_brg', 'status', 'id_detail_pinjam'], 'integer'],
+            [['id_dosen_staf', 'id_inventaris_brg', 'id_mhs', 'keterangan', 'status', 'tgl_pinjam'], 'required'],
+            [['id_dosen_staf', 'id_inventaris_brg', 'status'], 'integer'],
             [['keterangan'], 'string', 'max' => 255],
               [['tgl_pinjam', 'tgl_kembali'], 'safe'],
         ];
@@ -49,11 +49,8 @@ class Peminjaman extends \yii\db\ActiveRecord
             'tgl_pinjam' => 'Tanggal Pinjam',
             'tgl_Kembali' => 'Tanggal Kembali',
             'status' => 'Status',
-            'id_detail_pinjam' => 'Detail Pinjam'
         ];
     }
-
-
     public static function getCount()
     {
         return static::find()->count();
@@ -90,35 +87,10 @@ class Peminjaman extends \yii\db\ActiveRecord
 
         return static::find()->andWhere(['between','tgl_pinjam', "$tahun-$bulan-01", "$tahun-$bulan-$lastDay"]);
     }
-    public function getBarang()
+    public function getStatus()
     {
-            $listCategory   = InventarisBrg::find()->select('id, nama_brg')
-                ->where(['id_inventaris_brg' => 'Yes'])
-                ->andWhere(['status' => 'active','approved' => 'active'])
-                ->all();
-            $list   = ArrayHelper::map( $listCategory,'id','nama_brg');
-
-            return $list;
-    }
-    // public function findAllDetailPinjam()
-    // {
-    //     return DetailPinjam::find()
-    //         ->andWhere(['id_detail_pinjam' => $this->id_detail_pinjam])
-    //         ->all();
-    // }
-
-     public function findAllDetailPinjam()
-    {
-        return DetailPinjam::find()
-            ->andWhere(['id_detail_pinjam' => $this->id])
-            ->orderBy(['id_inventaris_brg' => SORT_ASC])
-            ->all();
-    }
-    public function findAllInventarisBrg()
-    {
-        return InventarisBrg::find()
-            ->andWhere(['id' => $this->id_inventaris_brg])
-            ->all();
+        $peminjam = Mhs::find();
+          $status = Peminjaman::find()->andWhere(['status' => 2])->orderBy(['tgl_pinjam' => $peminjam]);
     }
 
 }
