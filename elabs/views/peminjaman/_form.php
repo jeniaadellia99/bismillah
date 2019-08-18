@@ -52,18 +52,6 @@ SCRIPT;
 
 
    <?= $form->errorSummary($model); ?>
-
-    <?= $form->field($model, 'id_dosen_staf')->widget(Select2::classname(), [
-            'data' =>  DosenStaf::getList(),
-            'options' => [
-              'placeholder' => '- Pilih Dosen Staf -',
-            ],
-            'pluginOptions' => [
-                'allowClear' => true
-            ],
-        ]); ?>
-
-    
     <!--<table class='table table-striped'>
                                     <thead>
                                         <tr>
@@ -147,7 +135,3 @@ SCRIPT;
     </div>
 </div>
     <?php ActiveForm::end(); ?>
-
-<?php
-
-?>

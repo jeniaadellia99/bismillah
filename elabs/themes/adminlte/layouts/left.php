@@ -48,7 +48,7 @@ use app\models\User;
                     ['label' => 'Dashboard', 'icon' => 'dashboard', 'url' => ['site/dashboard'],],
                     ['label' => '', 'options' => ['class' => 'header']],
                     ['label' => 'Mahasiswa', 'icon' => 'user', 'url' => ['mhs/index'],], 
-                    ['label' => 'Dosen dan Staff', 'icon' => 'user', 'url' => ['dosen-staf/index'],],
+                    //['label' => 'Dosen dan Staff', 'icon' => 'user', 'url' => ['dosen-staf/index'],],
                     [
                         'label' => 'Pemakaian Laboratorium',
                         'icon' => 'circle-o',
@@ -90,13 +90,24 @@ use app\models\User;
             [
                 'options' => ['class' => 'sidebar-menu tree', 'data-widget'=> 'tree'],
                 'items' => [
+
                     ['label' => '', 'options' => ['class' => 'header']],
-                    ['label' => 'home', 'icon' => 'home', 'url' => ['site/dashboard'],],
-                    ['label' => 'Biodata', 'icon' => 'tty', 'url' => ['mhs/view'],],
-                    ['label' => '', 'options' => ['class' => 'header']],
+                    // ['label' => 'home', 'icon' => 'home', 'url' => ['site/dashboard'],],
+                    // ['label' => '', 'options' => ['class' => 'header']],
+                    ['label' => 'Form Peminjaman', 'icon' => 'circle-o', 'url' => ['peminjaman/create'],],
+                    //   [
+                    //     'label' => 'Peminjaman',
+                    //     'icon' => 'circle-o',
+                    //     'url' => '#',
+                    //     'items' => [
+                    //         ['label' => 'Form Peminjaman', 'icon' => 'circle-o', 'url' => ['peminjaman/create'],],
+                    //         ['label' => 'Peminjaman', 'icon' => 'circle-o', 'url' => ['peminjaman/index'],],
+                    //     ],
+                    // ],
+
                     // ['label' => 'form peminjaman', 'icon' => 'pencil-square-o', 'url' => ['peminjaman/create'],],
-                    ['label' => 'form peminjaman', 'icon' => 'pencil-square-o', 'url' => ['mhs/index'],],
-                    ['label' => 'Peminjaman', 'icon' => 'pencil-square-o', 'url' => ['peminjaman/index'],],
+                     ['label' => 'Peminjaman', 'icon' => 'circle-o', 'url' => ['peminjaman/index'],],
+                     ['label' => 'Pengembalian', 'icon' => 'circle-o', 'url' => ['peminjaman/index'],],
                     // ['label' => 'Pengembalian', 'icon' => 'pencil-square-o', 'url' => ['pengembalian/index'],],
            
                 ],

@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\User;
 use app\models\Peminjaman;
+use yii\data\ActiveDataProvider;
 
 /**
  * DetailPinjamController implements the CRUD actions for DetailPinjam model.
@@ -64,17 +65,46 @@ class DetailPinjamController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($id_pinjam=null)
+    public function actionCreate($id_pinjam=null, $id_inventaris_brg=null)
     {
         $model = new DetailPinjam();
-        $model->id_pinjam = $id_pinjam; //= Yii::$app->peminjaman->identity->id;        
-        
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['peminjaman/view', 'id' => $model->id_pinjam,'model'=>$model]);
-        }
+        $model->id_inventaris_brg = $id_inventaris_brg;
 
+        // $model->id_inventaris_brg = $id_inventaris_brg;
+        // $model->id_pinjam = $id_pinjam; //= Yii::$app->peminjaman->identity->id;        
+        // $model->id_inventaris_brg = $id_inventaris_brg; //= Yii::$app->peminjaman->identity->id;        
+        /**/
+        if ($model->load(Yii::$app->request->post())) {
+            $model->id_pinjam = $id_pinjam;
+            
+            if ($model->save()) {
+                return $this->redirect(['peminjaman/view', 'id' => $model->id_pinjam,'model'=>$model]);
+            } else {
+
+                //echo "Eror";
+                var_dump($model->errors);
+                die;
+            }
+            
+        } 
+
+        if (User::isMhs()) {
+         $model->jumlah = 1;
+        // $model->id_pinjam = Yii::$app->peminjaman->identity->id;
+         $model->id_pinjam = getPeminjaman($id);
+         $model->id_inventaris_brg = $id_inventaris_brg;
+         $model->save(false);
+         Yii::$app->session->setFlash('success', 'Berhasil. ');
+         return $this->redirect(['peminjaman/view', 'id' => $model->id_pinjam]);
+            // if ($model-> save()) {
+           
+            //     return $this->redirect(['peminjaman/view', 'id' => $model->id_pinjam,'model'=>$model]);
+            // }
+        }
         return $this->render('create', [
             'model' => $model,
+            // 'search' => $searchModel,
+        
         ]);
     }
 

@@ -165,7 +165,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             <tr>
                                 <td class="text-center"><?= $i++ ?></td>
                                 <td class="text-center"><?= $peminjam->mhs->nama ?></td>
-                                <td class="text-center"><?= $peminjam->inventarisBrg->nama_brg ?></td>
+                                 <td class="text-center"><?= Html::a('<i class="fa fa-check-square-o">Detail Barang</i>', ['peminjaman/view', 'id' => $peminjam->id]); ?>
+                                </td>
+                                
                                 <td class="text-center"><?= $peminjam->tgl_pinjam ?></td>
                                 <td class="text-center"><?= Html::a('<i class="fa fa-check-square-o">Konfirmasi</i>', ['peminjaman/acc-barang', 'id' => $peminjam->id], ['data' => ['confirm' => 'Apa anda yakin ingin menyutujui peminjaman ini?'],]); ?>
                                 </td>
@@ -186,6 +188,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php if (User::isMhs()): ?>
     <!-- CARIII -->
+  
     <div class="row">
     <div class="col-sm-6">
         <div class="box box-primary">
@@ -223,9 +226,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         <img style="height: 300px" class="img-responsive pad" src="<?= Yii::$app->request->baseUrl.'/upload/barang/'.$inventarisBrg['foto']; ?>" alt="Photo">
                     </center>
                     <?= Html::a("<i class='fa fa-eye'> Detail Barang</i>",['inventaris-brg/view','id'=>$inventarisBrg->id],['class' => 'btn btn-default']) ?>
-                    <?= Html::a('<i class="fa fa-file"> Pinjam Barang</i>', ['peminjaman/create', 'id_iventaris_brg' => $inventarisBrg->id], ['class' => 'btn btn-primary',
+                    <?= Html::a('<i class="fa fa-file"> Pinjam Barang</i>', ['detail-pinjam/create', 'id_inventaris_brg' => $inventarisBrg->id], ['class' => 'btn btn-primary',
                         'data' => [
-                            'confirm' => 'Do you want to borrow it?',
+                            'confirm' => 'Yakin ingin meminjam barang ini?',
                         ],
                     ]) ?>
                     <!-- <span class="pull-right text-muted">127 Peminjam - 3 Komentar</span> -->

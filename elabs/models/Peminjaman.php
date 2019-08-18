@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\InventarisBrg;
 
 /**
  * This is the model class for table "peminjaman".
@@ -28,8 +29,8 @@ class Peminjaman extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_dosen_staf', 'id_mhs', 'keterangan', 'status', 'tgl_pinjam'], 'required'],
-            [['id_dosen_staf', 'id_inventaris_brg', 'status', 'id_detail_pinjam'], 'integer'],
+            [['id_mhs', 'keterangan', 'status', 'tgl_pinjam'], 'required'],
+            [['id_dosen_staf', 'id_inventaris_brg', 'status'], 'integer'],
             [['keterangan'], 'string', 'max' => 255],
               [['tgl_pinjam', 'tgl_kembali'], 'safe'],
         ];
@@ -47,9 +48,9 @@ class Peminjaman extends \yii\db\ActiveRecord
             'id_dosen_staf' => 'Dosen/Staff',
             'keterangan' => 'Keterangan',
             'tgl_pinjam' => 'Tanggal Pinjam',
-            'tgl_Kembali' => 'Tanggal Kembali',
+            'tgl_kembali' => 'Tanggal Kembali',
             'status' => 'Status',
-            'id_detail_pinjam' => 'Detail Pinjam'
+            // 'id_detail_pinjam' => 'Detail Pinjam'
         ];
     }
 
@@ -58,9 +59,13 @@ class Peminjaman extends \yii\db\ActiveRecord
     {
         return static::find()->count();
     }
-    public function getInventarisBrg()
+    // public function getInventarisBrg()
+    // {
+    //     return $this->hasOne(InventarisBrg::className(), ['id' => 'id_inventaris_brg']);
+    // }
+    public function getDetailPinjam()
     {
-        return $this->hasOne(InventarisBrg::className(), ['id' => 'id_inventaris_brg']);
+        return $this->hasOne(InventarisBrg::className(), ['id' => 'jumlah']);
     }
     public function getDosenStaf()
     {
@@ -106,19 +111,29 @@ class Peminjaman extends \yii\db\ActiveRecord
     //         ->andWhere(['id_detail_pinjam' => $this->id_detail_pinjam])
     //         ->all();
     // }
-
-     public function findAllDetailPinjam()
+    // public function findAllInventarisBrg()
+    // {
+    //     return InventarisBrg::find()
+    //         ->andWhere(['id' => $this->id_inventaris_brg])
+    //         ->all();
+    // }
+    public function findAllDetailPinjam()
     {
         return DetailPinjam::find()
-            ->andWhere(['id_detail_pinjam' => $this->id])
+            ->where(['id_pinjam' => $this->id])
+            // ->joinWith('inventaris_brg')
+            // ->andWhere(['id_inventaris_brg' => $this->id])
             ->orderBy(['id_inventaris_brg' => SORT_ASC])
             ->all();
     }
-    public function findAllInventarisBrg()
+      public function getJumlahBarangPinjam()
     {
-        return InventarisBrg::find()
-            ->andWhere(['id' => $this->id_inventaris_brg])
-            ->all();
+        return DetailPinjam::find()
+            ->andWhere(['id_inventaris_brg' => $this->id])
+            ->count();
     }
-
+    public function getInventarisBrg()
+    {
+        return $this->hasOne(InventarisBrg::className(), ['id' => 'id_inventaris_brg']);
+    }
 }

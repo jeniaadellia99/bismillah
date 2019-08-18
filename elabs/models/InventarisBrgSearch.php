@@ -46,6 +46,7 @@ class InventarisBrgSearch extends InventarisBrg
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            // 'search' => $searchModel,
         ]);
 
         $this->load($params);

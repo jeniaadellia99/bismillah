@@ -17,7 +17,7 @@ class DetailPinjamSearch extends DetailPinjam
     public function rules()
     {
         return [
-            [['id_detail_pinjam', 'id_pinjam', 'id_inventaris_brg'], 'integer'],
+            [['id_detail_pinjam', 'id_pinjam', 'id_inventaris_brg','jumlah'], 'integer'],
         ];
     }
 
@@ -60,6 +60,7 @@ class DetailPinjamSearch extends DetailPinjam
             'id_detail_pinjam' => $this->id_detail_pinjam,
             'id_pinjam' => $this->id_pinjam,
             'id_inventaris_brg' => $this->id_inventaris_brg,
+            'jumlah' => $this->jumlah,
         ]);
 
         return $dataProvider;

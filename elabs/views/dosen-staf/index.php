@@ -30,12 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'text-align:center']
             ],
 
-            // 'nidn',
-            // 'nip',
+            'nidn',
+            'nip',
             'nik',
-            [
-                'attribute' => 'nama'
-            ],
+            'nama',
             'jabatan',
 
             ['class' => 'yii\grid\ActionColumn'],

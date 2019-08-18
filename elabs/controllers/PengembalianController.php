@@ -8,13 +8,9 @@ use app\models\PengembalianSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\User;
-use app\models\PeminjamanSearch;
-use app\models\Peminjaman;
-use yii\filters\AccessControl;
 
 /**
- * PeminjamanController implements the CRUD actions for Peminjaman model.
+ * PengembalianController implements the CRUD actions for Pengembalian model.
  */
 class PengembalianController extends Controller
 {
@@ -24,24 +20,6 @@ class PengembalianController extends Controller
     public function behaviors()
     {
         return [
-
-            // Access Control URL.
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['update', 'view', 'delete'],
-                        'allow' => User::isAdmin(),
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['index', 'kembalikan-buku'],
-                        'allow' => User::isMhs(),
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -50,13 +28,14 @@ class PengembalianController extends Controller
             ],
         ];
     }
+
     /**
-     * Lists all Peminjaman models.
+     * Lists all Pengembalian models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new PeminjamanSearch();
+        $searchModel = new PengembalianSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -66,7 +45,7 @@ class PengembalianController extends Controller
     }
 
     /**
-     * Displays a single Peminjaman model.
+     * Displays a single Pengembalian model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -79,28 +58,17 @@ class PengembalianController extends Controller
     }
 
     /**
-     * Creates a new Peminjaman model.
+     * Creates a new Pengembalian model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Peminjaman();
-        if (User::isMhs()) {
-            $model->id_mhs = Yii::$app->user->identity->id_mhs;
-            $model->status = '1';
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-        }
-        elseif (User::isAdmin()) {
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-    }
+        $model = new Pengembalian();
 
-    
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
 
         return $this->render('create', [
             'model' => $model,
@@ -108,7 +76,7 @@ class PengembalianController extends Controller
     }
 
     /**
-     * Updates an existing Peminjaman model.
+     * Updates an existing Pengembalian model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -128,7 +96,7 @@ class PengembalianController extends Controller
     }
 
     /**
-     * Deletes an existing Peminjaman model.
+     * Deletes an existing Pengembalian model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -142,55 +110,18 @@ class PengembalianController extends Controller
     }
 
     /**
-     * Finds the Peminjaman model based on its primary key value.
+     * Finds the Pengembalian model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Peminjaman the loaded model
+     * @return Pengembalian the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Peminjaman::findOne($id)) !== null) {
+        if (($model = Pengembalian::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-    public function KembalikanBarang($value='')
-    {
-        $model = Peminjaman::findOne($id);
-        $model->tgl_kembali = date('Y-m-d');
-        
-        $model->status = 4;
-
-          $model->save(false);
-
-           Yii::$app->session->setFlash('Berhasil', 'Buku sudah berhasil di kembalikan');
-
-        if (User::isMhs()) {
-            return $this->redirect(Yii::$app->request->referrer);
-        } else {
-            return $this->redirect(['pengembalian/index']);
-        }
-    }
-    public function actionCekStatus()
-    {
-        $query = Peminjaman::find()
-            ->andWhere(['<','tgl_pinjam',date('Y-m-d')])
-            ->andWhere(['tgl_kembali' => null])
-            ->all();
-
-        /*
-        $query = Peminjaman::find()
-            ->andWhere(['tanggal_kembali' => date('Y-m-d')])
-            ->all();
-        */
-
-        foreach ($query as $peminjaman) {
-            $peminjaman->status= Peminjaman::DIKEMBALIKAN;
-            $peminjaman->save();
-        }
-
-        // return $this->goBack();
     }
 }

@@ -46,15 +46,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 return @$data->mhs->nama;
                }
            ],
-            [
-               'attribute' =>'id_dosen_staf',
-               'filter' => DosenStaf::getList(),
-               'headerOptions' => ['style' => 'text-align:center;'],
-               'contentOptions' => ['style' => 'text-align:center'],
-               'value' => function($data){
-                return @$data->dosenStaf->nama;
-               }
-           ],
            //   [
            //     'attribute' =>'id_inventaris_brg',
            //     'filter' => InventarisBrg::getList(),
@@ -66,15 +57,15 @@ $this->params['breadcrumbs'][] = $this->title;
            // ],
 
            
-            [
-                'attribute' => 'tgl_pinjam',
+           [
+                'label' => 'Tanggal Pinjam',
                 'format' => 'raw',
                 'value' => function($data) {
                     return Helper::getTanggalSingkat($data->tgl_pinjam);
                 },
-            ],
+          ],
            [
-                'attribute' => 'tgl_kembali',
+                'label' => 'Tanggal Kembali',
                 'format' => 'raw',
                 'value' => function($data) {
                     return Helper::getTanggalSingkat($data->tgl_kembali);
@@ -125,24 +116,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['style' => 'text-align:center'],
                 'contentOptions' => ['style' => 'text-align:center']
             ],
-             [
-               'attribute' =>'id_dosen_staf',
-               'filter' => DosenStaf::getList(),
-               'headerOptions' => ['style' => 'text-align:center;'],
-               'contentOptions' => ['style' => 'text-align:center'],
-               'value' => function($data){
-                return @$data->dosenStaf->nama;
-               }
-           ],
-             [
-               'attribute' =>'id_inventaris_brg',
-               'filter' => InventarisBrg::getList(),
-               'headerOptions' => ['style' => 'text-align:center;'],
-               'contentOptions' => ['style' => 'text-align:center'],
-               'value' => function($data){
-                return @$data->inventarisBrg->nama_brg;
-               }
-           ],
+           //   [
+           //     'attribute' =>'id_inventaris_brg',
+           //     'filter' => InventarisBrg::getList(),
+           //     'headerOptions' => ['style' => 'text-align:center;'],
+           //     'contentOptions' => ['style' => 'text-align:center'],
+           //     'value' => function($data){
+           //      return @$data->inventarisBrg->nama_brg;
+           //     }
+           // ],
 
             [
                'attribute' =>'id_mhs',
@@ -191,7 +173,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'keterangan',
             [
                         'class' => 'yii\grid\ActionColumn',
-                        'template' => '{view}{kembalikan}',
+                        'template' => '{view} {kembalikan}',
                         'buttons' => [
                             'kembalikan' => function($url, $model, $key) {
                                 return Html::a('<i class="fa fa-check-square-o"></i>', ['kembalikan-barang', 'id' => $model->id], ['data' => ['confirm' => 'Apa anda yakin ingin mengembalikan barang ini?'],]);

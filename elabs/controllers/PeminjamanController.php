@@ -65,40 +65,24 @@ class PeminjamanController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($id_mhs=null)
+    public function actionCreate()
     {
-        $model = new DetailPinjam();
-        $model->id_detail_pinjam = $model->id_detail_pinjam;
-        $model->save();
         $model = new Peminjaman();
-        $model->id_mhs = $id_mhs;
-
-
-
-
-        // $model = InventarisBrg(['jumlah_brg']);
-        // $inventaris_brg = InventarisBrg();
-        // $inventaris_brg->jumlah_brg = $model->id_inventaris_brg;
-        // if ($inventaris_brg==0) {
-        //   return $this->redirect(Yii::$app->session->setFlash('error', "barang tidak ada"));
-        // }
-       
-        if (User::isMhs()) {
-           
+        
+        if (User::isMhs())
+        {
             $model->id_mhs = Yii::$app->user->identity->id_mhs;
             $model->status = '1';
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-               return $this->redirect(['view', 'id' => $model->id_mhs]);
+               return $this->redirect(['view', 'id' => $model->id]);
             }
         }
         elseif (User::isAdmin()) {
-           
             $model->status = '2';
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
             }
         }
-
         return $this->render('create', [
             'model' => $model,
         ]);
@@ -159,7 +143,7 @@ class PeminjamanController extends Controller
         
         $model->status = 2;
 
-          $model->save(false);
+        $model->save(false);
 
         Yii::$app->session->setFlash('Berhasil', 'Barang sudah boleh dipinjam');
 

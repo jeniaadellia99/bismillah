@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                }
             ],
              [
-                    'label' => 'tambah',
+                    'attribute' => 'jumlah',
                    
                 ],
 

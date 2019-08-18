@@ -66,15 +66,18 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        if (!Yii::$app->user->isGuest) {
+        if (User::isAdmin()) {
            return $this->redirect(['site/dashboard']);
+        }if (User::isMhs()) {
+          return $this->redirect(['site/about']);
         }else{
             return $this->redirect(['site/login']);
         }
     }
+
     public function actionDashboard()
     {
-        if (User::isAdmin() || User::isMhs()) {
+        if (User::isMhs() || User::isAdmin()) {
             $searchModel = new PencarianInventarisBrg();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
