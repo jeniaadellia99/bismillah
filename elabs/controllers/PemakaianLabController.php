@@ -50,9 +50,19 @@ class PemakaianLabController extends Controller
             return $this->exportPdf(Yii::$app->request->queryParams);
         }
 
+        if (Yii::$app->request->get('export-pdf-so')) {
+            return $this->exportPdfSo(Yii::$app->request->queryParams);
+        }
+
         if (Yii::$app->request->get('export-excel')) {
             return $this->exportExcel(Yii::$app->request->queryParams);
         }
+
+
+        if (Yii::$app->request->get('export-excel-ti')) {
+            return $this->exportExcel(Yii::$app->request->queryParams);
+        }
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -144,8 +154,7 @@ class PemakaianLabController extends Controller
     public function exportPdf($params)
     {
         $searchModel = new PemakaianLabSearch();
-        $searchModel = $searchModel->getQuerySearch($params)->all();
-        
+        $searchModel = $searchModel->getQuerySearch($params)->all();       
         $content = $this->renderPartial('/template/pemakaian-lab',['model' => $searchModel]);
 
         $cssInline = <<<CSS
@@ -201,6 +210,184 @@ CSS;
         return $pdf->render();
     }
 
+    public function actionPdfSo()
+    {
+        $searchModel = new PemakaianLabSearch();
+        $searchModel = PemakaianLab::find()->where(['id_lab'=>1])->all();       
+        $content = $this->renderPartial('/template/pemakaian-lab',['model' => $searchModel]);
+
+        $cssInline = <<<CSS
+        table {
+            *border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+        .table-pdf td, .table-pdf th {
+            padding: 10px;
+            border: 1px solid #0000;
+            text-align: center;
+        }
+        .table-pdf th {
+            border: 1px solid #0000;
+            background-color: #eee;
+            text-align: center;
+        }
+CSS;
+
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8,
+            'marginLeft' => 10,
+            'marginRight' => 10,
+            // A4 paper format
+            'format' => Pdf::FORMAT_LEGAL,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_LANDSCAPE,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => $cssInline,
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Linen - Supervisi Outsourcing'],
+             // call mPDF methods on the fly
+            'methods' => [
+                'SetHeader'=> [null],
+                'SetFooter'=> [null],
+            ]
+        ]);
+
+        $date = date('Y-m-d His');
+
+        $pdf->filename = "Pemakaian lab - ".$date.".pdf";
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
+    }
+
+    public function actionPdfPemrog()
+    {
+        $searchModel = new PemakaianLabSearch();
+        $searchModel = PemakaianLab::find()->where(['id_lab'=>2])->all();       
+        $content = $this->renderPartial('/template/pemakaian-lab',['model' => $searchModel]);
+
+        $cssInline = <<<CSS
+        table {
+            *border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+        .table-pdf td, .table-pdf th {
+            padding: 10px;
+            border: 1px solid #0000;
+            text-align: center;
+        }
+        .table-pdf th {
+            border: 1px solid #0000;
+            background-color: #eee;
+            text-align: center;
+        }
+CSS;
+
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8,
+            'marginLeft' => 10,
+            'marginRight' => 10,
+            // A4 paper format
+            'format' => Pdf::FORMAT_LEGAL,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_LANDSCAPE,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => $cssInline,
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Linen - Supervisi Outsourcing'],
+             // call mPDF methods on the fly
+            'methods' => [
+                'SetHeader'=> [null],
+                'SetFooter'=> [null],
+            ]
+        ]);
+
+        $date = date('Y-m-d His');
+
+        $pdf->filename = "Pemakaian lab - ".$date.".pdf";
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
+    }
+
+     public function actionPdfTuk()
+    {
+        $searchModel = new PemakaianLabSearch();
+        $searchModel = PemakaianLab::find()->where(['id_lab'=>3])->all();       
+        $content = $this->renderPartial('/template/pemakaian-lab',['model' => $searchModel]);
+
+        $cssInline = <<<CSS
+        table {
+            *border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+        .table-pdf td, .table-pdf th {
+            padding: 10px;
+            border: 1px solid #0000;
+            text-align: center;
+        }
+        .table-pdf th {
+            border: 1px solid #0000;
+            background-color: #eee;
+            text-align: center;
+        }
+CSS;
+
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8,
+            'marginLeft' => 10,
+            'marginRight' => 10,
+            // A4 paper format
+            'format' => Pdf::FORMAT_LEGAL,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_LANDSCAPE,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => $cssInline,
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Linen - Supervisi Outsourcing'],
+             // call mPDF methods on the fly
+            'methods' => [
+                'SetHeader'=> [null],
+                'SetFooter'=> [null],
+            ]
+        ]);
+
+        $date = date('Y-m-d His');
+
+        $pdf->filename = "Pemakaian lab - ".$date.".pdf";
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
+    }
+
+
      public function exportExcel($params)
     {
         $spreadsheet = new Spreadsheet();
@@ -223,25 +410,28 @@ CSS;
         $sheet->getColumnDimension('C')->setWidth(20);
         $sheet->getColumnDimension('D')->setWidth(35);
         $sheet->getColumnDimension('E')->setWidth(30);
+        $sheet->getColumnDimension('F')->setWidth(30);
+        $sheet->getColumnDimension('G')->setWidth(30);
        
        
 
         $sheet->setCellValue('A3', strtoupper('No'));
+        $sheet->setCellValue('B3', strtoupper('Nomor Komputer'));
         $sheet->setCellValue('C3', strtoupper('Nama Pengguna'));
-        $sheet->setCellValue('B3', strtoupper('Nama Lab'));
-        $sheet->setCellValue('C3', strtoupper('Kode Lab'));
-        $sheet->setCellValue('D3', strtoupper('mata kuliah'));
-        $sheet->setCellValue('E3', strtoupper('tanggal'));
+        $sheet->setCellValue('D3', strtoupper('Nama Laboratorium'));
+        $sheet->setCellValue('E3', strtoupper('Mata Kuliah'));
+        $sheet->setCellValue('F3', strtoupper('Waktu Masuk'));
+        $sheet->setCellValue('G3', strtoupper('Waktu Keluar'));
 
 
-        $spreadsheet->getActiveSheet()->setCellValue('A1', 'fkkskdf');
+        $spreadsheet->getActiveSheet()->setCellValue('A1', 'Data Pemakaian Laboratorium');
 
-        $spreadsheet->getActiveSheet()->getStyle('A3:E3')->getFill()->setFillType(Fill::FILL_SOLID);
-        $spreadsheet->getActiveSheet()->getStyle('A3:E3')->getFill()->getStartColor()->setARGB('d8d8d8');
-        $spreadsheet->getActiveSheet()->mergeCells('A1:E1');
+        $spreadsheet->getActiveSheet()->getStyle('A3:G3')->getFill()->setFillType(Fill::FILL_SOLID);
+        $spreadsheet->getActiveSheet()->getStyle('A3:G3')->getFill()->getStartColor()->setARGB('d8d8d8');
+        $spreadsheet->getActiveSheet()->mergeCells('A1:G1');
         $spreadsheet->getActiveSheet()->getDefaultRowDimension('3')->setRowHeight(25);
-        $sheet->getStyle('A1:E3')->getFont()->setBold(true);
-        $sheet->getStyle('A1:E3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:G3')->getFont()->setBold(true);
+        $sheet->getStyle('A1:G3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         $row = 3;
         $i=1;
@@ -251,11 +441,12 @@ CSS;
         foreach($searchModel->getQuerySearch($params)->all() as $data){
             $row++;
             $sheet->setCellValue('A' . $row, $i);
-            $sheet->setCellValue('B' . $row, $data->nama_pengguna);
-            $sheet->setCellValue('C' . $row, $data->nama_lab);
-            $sheet->setCellValue('D' . $row, $data->mata_kuliah);
-            $sheet->setCellValue('E' . $row, $data->date);
-            
+            $sheet->setCellValue('B' . $row, $data->no_komputer);
+            $sheet->setCellValue('C' . $row, $data->nama_pengguna);
+            $sheet->setCellValue('D' . $row, @$data->lab->nama);
+            $sheet->setCellValue('E' . $row, $data->mata_kuliah);
+            $sheet->setCellValue('F' . $row, $data->date);
+            $sheet->setCellValue('G' . $row, $data->tgl_keluar);
             $i++;
         }
 
@@ -266,7 +457,7 @@ CSS;
 
         $sheet->getStyle('C' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-        $sheet->getStyle('A3:E' . $row)->applyFromArray($setBorderArray);
+        $sheet->getStyle('A3:G' . $row)->applyFromArray($setBorderArray);
 
         $filename = time() . 'pemakaian-lab.xlsx';
         $path = 'export/' . $filename;

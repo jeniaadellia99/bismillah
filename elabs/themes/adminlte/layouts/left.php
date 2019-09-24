@@ -8,16 +8,22 @@ use app\models\User;
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-              <?php if (User::isAdmin()): ?>
+                        <?php if (User::isAdmin()): ?>
                             <?= User::getFotoAdmin(['class' => 'user-image']); ?>
-                            <?php endif ?>
-                            <?php if (User::isMhs()): ?>
+                                <?php endif ?>
+                        <?php if (User::isDosenStaf()): ?>
+                            <?= User::getFotoDosenStaf(['class' => 'user-image']); ?>
+                                <?php endif ?>
+                        <?php if (User::isMhs()): ?>
                                 <?= User::getFotoMhs(['class' => 'user-image']); ?>
                             <?php endif ?>
             </div>
             <div class="pull-left info">
             <?php if (User::isMhs()): ?>
                <p><?= Yii::$app->user->identity->mhs->nama; ?></p>
+               <?php endif ?>
+             <?php if (User::isDosenStaf()): ?>
+               <p><?= Yii::$app->user->identity->dosenStaf->nama; ?></p>
                <?php endif ?>
                 <?php if (User::isAdmin()): ?>
                     <p><?= Yii::$app->user->identity->username; ?></p>
@@ -54,7 +60,8 @@ use app\models\User;
                         'icon' => 'circle-o',
                         'url' => '#',
                         'items' => [
-                            ['label' => 'Laboratorium ', 'icon' => 'circle-o', 'url' => ['pemakaian-lab/index'],],
+                            ['label' => 'Pemakaian Komputer', 'icon' => 'circle-o', 'url' => ['pemakaian-lab/index'],],
+                            ['label' => 'Laboratorium', 'icon' => 'circle-o', 'url' => ['lab/index'],],
                     ],
 
                     ],
@@ -67,16 +74,16 @@ use app\models\User;
                             ['label' => 'Invetaris Barang', 'icon' => 'circle-o', 'url' => ['inventaris-brg/index'],],
                         ],
                     ],
-
-                     ['label' => 'Peminjaman', 'icon' => 'pencil-square-o', 'url' => ['peminjaman/index'],],
-
+                    ['label' => 'Peminjaman', 'icon' => 'pencil-square-o', 'url' => ['peminjaman/index'],],
+                     ['label' => 'Pengembalian', 'icon' => 'pencil-square-o', 'url' => ['pengembalian/index'],],
                       [
                         'label' => 'Pengguna',
                         'icon' => 'circle-o',
                         'url' => '#',
                         'items' => [
-                            ['label' => 'user', 'icon' => 'circle-o', 'url' => ['user/index'],],
+                            ['label' => 'User', 'icon' => 'circle-o', 'url' => ['user/index'],],
                             ['label' => 'Mahasiswa', 'icon' => 'circle-o', 'url' => ['mhs/index'],],
+                            ['label' => 'Dosen Staf', 'icon' => 'circle-o', 'url' => ['dosen-staf/index'],],
                         ],
                     ],
            
@@ -85,7 +92,7 @@ use app\models\User;
         ) ?>
 
     <?php ?>
-     <?php } elseif (User::isMhs()) { ?>
+     <?php } elseif (User::isMhs()|| User::isDosenStaf()) { ?>
          <?= dmstr\widgets\Menu::widget(
             [
                 'options' => ['class' => 'sidebar-menu tree', 'data-widget'=> 'tree'],
@@ -107,12 +114,16 @@ use app\models\User;
 
                     // ['label' => 'form peminjaman', 'icon' => 'pencil-square-o', 'url' => ['peminjaman/create'],],
                      ['label' => 'Peminjaman', 'icon' => 'circle-o', 'url' => ['peminjaman/index'],],
-                     ['label' => 'Pengembalian', 'icon' => 'circle-o', 'url' => ['peminjaman/index'],],
-                    // ['label' => 'Pengembalian', 'icon' => 'pencil-square-o', 'url' => ['pengembalian/index'],],
+                     // ['label' => 'Pengembalian', 'icon' => 'circle-o', 'url' => ['peminjaman/index'],],
+                    ['label' => 'Pengembalian', 'icon' => 'circle-o', 'url' => ['pengembalian/index'],],
            
                 ],
             ]
         ) ?>
+
+    <?php  ?>
+
+  <!--  -->
 
     <?php } ?>
 

@@ -64,8 +64,8 @@ use app\assets\AppAsset;
 
 </div>
 <div class="box-footer">
-  <div class="col-sm-offset-2 col-sm-3">
-   <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+  <div class="col-sm-offset-2 col-sm-3"> 
+  <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
  </div>
 </div>
 </div>

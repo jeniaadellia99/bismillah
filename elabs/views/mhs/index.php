@@ -14,10 +14,24 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="mhs-index box box-primary">
   <div class="box-body table-responsive">
   
-
     <p>
         <?= Html::a('Tambah Mahasiswa', ['create'], ['class' => 'btn btn-success']) ?>
+
+         <div class="btn-group">
+            <?= Html::a('<i class="fa fa-print"> Export Excel All</i>', ['export-excel'], ['class' => 'btn bg-olive']) ?>
+            <button type="button" class="btn bg-navy" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><?= Html::a('Export Excel Teknik Informatika', ['export-excel-ti'], ['class' => 'btn btn-flat']) ?></li>
+              <li><?= Html::a('Export Excel Teknik Mesin', ['export-excel-tm'], ['class' => 'btn btn-flat']) ?></li>
+              <li><?= Html::a('Export Excel Teknik Pendingin dan tata udara', ['export-excel-tp'], ['class' => 'btn btn-flat']) ?></li>
+            </ul>
+          </div>
     </p>
+   
+
+
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -31,9 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['style' => 'text-align:center'],
                 'contentOptions' => ['style' => 'text-align:center']
             ],
-
-
-            ['attribute'=>'nama',
+           ['attribute'=>'nama',
               'headerOptions' => ['style'=>'text-align:center;'],
               'contentOptions' => ['style'=>'text-align:center']
             ],

@@ -49,75 +49,38 @@ SCRIPT;
         <h3 class="box-title">Form Permohonan Peminjaman</h3>       
     </div>
         <div class="box-body">
-
+<?php 
+$date = date('y-m-d'); // untuk tanggal hari ini
+$weekend = "[0,6]"; // mendisable weekend
+// $disableDates = ['2018-03-18','2018-03-07']; // tanggal-tanggal hari libur
+?>
 
    <?= $form->errorSummary($model); ?>
-    <!--<table class='table table-striped'>
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Kode Barang</th>
-                                            <th>Nama Barang</th>
-                                            <th>kategori barang</th>
-                                            <th>Jumlah barang</th>
-                                        </tr>
-                                    </thead>
 
-                                    <tbody>
-                                        <?php
-                                            // $no = 1;
-                                            // $sql = $koneksi->query("SELECT * FROM detail_pinjam, inventaris_brg WHERE inventaris_brg.kode_brg=inventaris_brg.kode_brg AND id_pinjam='$kode'");
-                                            // while ($data = $sql->fetch_assoc()) {
 
-                                        ?>
-                                        <tr>
-                                            <td><?php //echo $no++; ?></td>
-                                            <td><?php //echo $data['Kode_brg'] ?></td>
-                                            <td><?php //echo $data['nama_brg'] ?></td>
-                                            <td><?php //echo $data['id_kategori_brg'] ?></td>
-                                            <td><?php //echo $data['jumlah'] ?></td>
-                                            <td>
-                                                <a href="?page=penjualan&aksi=ubah&id=<?php //echo $data['id']?>&kode_pj=<?php// echo $data['kode_penjualan']?>&harga_jual=<?php //echo $data['harga_jual']?>&kode_barcode=<?php// echo $data['kode_barcode']?>" class="btn btn-success"><i class="material-icons">add</i></a>
-                                                <a href="?page=penjualan&aksi=ubah&id=<?php //echo $data['id']?>&kode_pj=<?php //echo $data['kode_penjualan']?>&harga_jual=<?php //echo $data['harga_jual']?>&kode_barcode=<?php //echo $data['kode_barcode']?>" class="btn btn-success"><i class="material-icons">remove</i></a>
-                                                <a href="?page=penjualan&aksi=ubah&id=<?php //echo $data['id']?>&kode_pj=<?php //echo $data['kode_penjualan']?>&harga_jual=<?php //echo $data['harga_jual']?>&kode_barcode=<?php //echo $data['kode_barcode']?>" class="btn btn-danger"><i class="material-icons">clear</i></a>
-                                            </td>
-                                        </tr>
-
-                                        <?php
-
-//                                            $total_bayar = $total_bayar + $data['total'];
-  //                                          }
-                                        ?>
-                                    </tbody>
-
-?>-->
-
-    <?= $form->field($model, 'tgl_pinjam')->widget(DatePicker::className(), [
+    <?= $form->field($model, 'tgl_kembali')->widget(DatePicker::className(), [
                 'removeButton' => false,
-                'value' => date('Y-m-d'),
-                'options' => ['placeholder' => 'Tanggal Pinjam'],
-                'pluginOptions' => [
-                    'autoclose'=>true,
-                    'format' => 'yyyy-mm-dd'
-                ]
-        ]) ?>
 
-         <?= $form->field($model, 'tgl_kembali')->widget(DatePicker::className(), [
-                'removeButton' => false,
-                'value' => date('Y-m-d'),
                 'options' => ['placeholder' => 'Tanggal Kembali'],
                 'pluginOptions' => [
-                    'autoclose'=>true,
-                    'format' => 'yyyy-mm-dd'
-                ]
-        ]) ?>
+      'weekStart' => 1,
+      'autoclose' => true,
+      'format' => 'yyyy-mm-dd',
+      'startDate' => $date,
+      'endDate' => '+1m',
+      'daysOfWeekDisabled' => $weekend,
+      'todayHighlight' => true,
+      'disabled' => !empty($model->tgl_kembali),
+  ]
+]) ?>
+
 
 <?php if (User::isAdmin()) { ?>
    
        <?= $form->field($model, 'id_mhs')->widget(Select2::classname(), [
             'data' =>  Mhs::getList(),
             'options' => [
-              'placeholder' => '- Pilih Mahasiswa -',
+              'placeholder' => '',
             ],
             'pluginOptions' => [
                 'allowClear' => true

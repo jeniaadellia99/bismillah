@@ -29,7 +29,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['style' => 'text-align:center'],
                 'contentOptions' => ['style' => 'text-align:center']
             ],
-            'nama',
+            ['attribute' => 'nama', 'headerOptions'=>['style'=>'text-align:center'],],
+             [
+                    'attribute' => 'Jumlah Barang',
+                    'headerOptions' => ['style'=>'text-align:center'],
+                    'value' => function($model) {
+                        return $model->getJumlahBarang()." Barang";
+                    }
+                ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

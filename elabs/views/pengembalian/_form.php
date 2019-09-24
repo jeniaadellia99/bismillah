@@ -1,27 +1,39 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Pengembalian */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="pengembalian-form">
+<?php $form = ActiveForm::begin([
+  'layout'=>'horizontal',
+  'enableAjaxValidation'=>false,
+  'enableClientValidation'=>false,
+  'fieldConfig' => [
+    'horizontalCssClasses' => [
 
-    <?php $form = ActiveForm::begin(); ?>
+      'wrapper' => 'col-sm-4',
+      'error' => '',
+      'hint' => '',
+    ],
+  ]
+]); ?>
 
-    <?= $form->field($model, 'id_pinjam')->textInput() ?>
+<div class="pengembalian-form box box-primary">
 
-    <?= $form->field($model, 'tgl_kembali')->textInput() ?>
+     <?= $form->errorSummary($model); ?><br>
 
-    <?= $form->field($model, 'kondisi')->textInput() ?>
+    <?php $list = [1 => 'Baik dan Lengkap', 2 => 'Baik dan Tidak Lengkap', 3 => 'Rusak Ringan', 4 => 'Rusak berat']; echo $form->field($model, 'kondisi')->radioList($list); ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-
+   </div>
+<div class="box-footer">
+  <div class="col-sm-offset-2 col-sm-3">
+   <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+ </div>
 </div>
+
+<?php ActiveForm::end(); ?>

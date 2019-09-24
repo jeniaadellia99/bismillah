@@ -68,31 +68,50 @@ class SiteController extends Controller
     {
         if (User::isAdmin()) {
            return $this->redirect(['site/dashboard']);
-        }if (User::isMhs()) {
+        }if (User::isMhs() || User::isDosenStaf()) {
           return $this->redirect(['site/about']);
-        }else{
+        }if (User::isDosenStaf()) {
+          return $this->redirect(['site/about']);
+        }
+        else{
             return $this->redirect(['site/login']);
         }
     }
 
     public function actionDashboard()
     {
-        if (User::isMhs() || User::isAdmin()) {
+      if (User::isDosenStaf()) {
             $searchModel = new PencarianInventarisBrg();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+            $request = json_decode(json_encode(Yii::$app->request->queryParams));
+            
               return $this->render('dashboard', [
                 'searchModel' => $searchModel,
-                'provider' => $dataProvider
+                'provider' => $dataProvider,
+                'id_pinjam' => $request->id_pinjam,
             ]);
-           
-            // $provider = new ActiveDataProvider([
-            //     'query' => \app\models\InventarisBrg::find(),
-            //     'pagination' => [
-            //         'pageSize' => 5,
-            //     ], 
-            // ]);
-            // return $this->render('dashboard', ['provider' => $provider]);
+
+           }
+        if (User::isMhs()) {
+               $searchModel = new PencarianInventarisBrg();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            $request = json_decode(json_encode(Yii::$app->request->queryParams));
+            
+              return $this->render('dashboard', [
+                'searchModel' => $searchModel,
+                'provider' => $dataProvider,
+               'id_pinjam' => $request->id_pinjam,
+            ]);
+
+           }if (User::isAdmin()) {
+            $searchModel = new PencarianInventarisBrg();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            $request = json_decode(json_encode(Yii::$app->request->queryParams));
+            
+              return $this->render('dashboard', [
+                'searchModel' => $searchModel,
+                'provider' => $dataProvider,
+            ]);
         }else{
             return $this->redirect(['site/login']);
         }

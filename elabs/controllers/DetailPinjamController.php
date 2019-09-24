@@ -11,7 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\User;
 use app\models\Peminjaman;
 use yii\data\ActiveDataProvider;
-
+use app\models\InventarisBrg;
 /**
  * DetailPinjamController implements the CRUD actions for DetailPinjam model.
  */
@@ -68,38 +68,64 @@ class DetailPinjamController extends Controller
     public function actionCreate($id_pinjam=null, $id_inventaris_brg=null)
     {
         $model = new DetailPinjam();
-        $model->id_inventaris_brg = $id_inventaris_brg;
-
-        // $model->id_inventaris_brg = $id_inventaris_brg;
-        // $model->id_pinjam = $id_pinjam; //= Yii::$app->peminjaman->identity->id;        
-        // $model->id_inventaris_brg = $id_inventaris_brg; //= Yii::$app->peminjaman->identity->id;        
-        /**/
+        $model->id_inventaris_brg = $id_inventaris_brg; // model
         if ($model->load(Yii::$app->request->post())) {
-            $model->id_pinjam = $id_pinjam;
-            
-            if ($model->save()) {
+            $model->id_pinjam = $id_pinjam; // model
+            $id_inventaris_brg = $model->id_inventaris_brg; //model
+            $jumlah = $model->jumlah;
+            $model->status = 1; //model
+            $request = Yii::$app->request->post();
+            $request = json_decode(json_encode($request));
+        
+            $modelbarang_db = InventarisBrg::findOne($id_inventaris_brg); //select berdasarkan barang
+            // BARANG 0
+            if ($modelbarang_db->jumlah_brg < $request->DetailPinjam->jumlah) {
+                Yii::$app->session->setFlash('danger', 'BARANG TIDAK ADA / BARANG SEDANG DI PINJAM');
                 return $this->redirect(['peminjaman/view', 'id' => $model->id_pinjam,'model'=>$model]);
-            } else {
 
-                //echo "Eror";
-                var_dump($model->errors);
-                die;
             }
-            
+            // BARANG ADA 
+            if ($model->save($modelbarang_db))
+            {
+                 Yii::$app->session->setFlash('success', 'Barang Berhasil Ditambahkan');
+                return $this->redirect(['peminjaman/view', 'id' => $model->id_pinjam,'model'=>$model]);
+            }
+            else
+            {
+                echo "tidak ada";
+            }
         } 
+        if (Yii::$app->user->identity->id_user_role == 2 || Yii::$app->user->identity->id_user_role == 3) {
+        $model = new DetailPinjam();
+        $model->id_inventaris_brg = $id_inventaris_brg;
+        $request = json_decode(json_encode(Yii::$app->request->queryParams));
+        if ($model->load(Yii::$app->request->post())) {
+            $model->id_inventaris_brg = $request->id_inventaris_brg;
+            $model->id_pinjam = $request->id_pinjam;
+            $model->status = 2;
 
-        if (User::isMhs()) {
-         $model->jumlah = 1;
-        // $model->id_pinjam = Yii::$app->peminjaman->identity->id;
-         $model->id_pinjam = getPeminjaman($id);
-         $model->id_inventaris_brg = $id_inventaris_brg;
-         $model->save(false);
-         Yii::$app->session->setFlash('success', 'Berhasil. ');
-         return $this->redirect(['peminjaman/view', 'id' => $model->id_pinjam]);
-            // if ($model-> save()) {
-           
-            //     return $this->redirect(['peminjaman/view', 'id' => $model->id_pinjam,'model'=>$model]);
+            $request = Yii::$app->request->post();
+            $request = json_decode(json_encode($request));
+            $modelbarang_db = InventarisBrg::findOne($id_inventaris_brg);
+
+            if ($modelbarang_db->jumlah_brg < $request->DetailPinjam->jumlah) {
+                Yii::$app->session->setFlash('danger', 'BARANG TIDAK ADA/SEDANG DI PINJAM');
+                return $this->redirect(['peminjaman/view', 'id' => $model->id_pinjam,'model'=>$model]);
+
+            }
+            // if ($model->status==1) {
+            //     # code...
             // }
+            if ($model->save($modelbarang_db))
+            {
+                 Yii::$app->session->setFlash('success', 'Barang Berhasil Ditambahkan');
+                return $this->redirect(['peminjaman/view', 'id' => $model->id_pinjam,'model'=>$model]);
+            }
+        }
+       
+       
+
+       
         }
         return $this->render('create', [
             'model' => $model,
@@ -120,7 +146,7 @@ class DetailPinjamController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_detail_pinjam]);
+           return $this->redirect(['peminjaman/view', 'id' => $model->id_pinjam]);
         }
 
         return $this->render('update', [
@@ -137,9 +163,9 @@ class DetailPinjamController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+     return $this->redirect(['peminjaman/view', 'id_pinjam' => $model->id_pinjam ]);
     }
 
     /**
@@ -171,6 +197,48 @@ class DetailPinjamController extends Controller
         return $this->render('create', [
             'model' => $model,
         ]);
+    }
+    public function actionAccBarang($id_detail_pinjam=null)
+    {
+        $model = DetailPinjam::findOne($id_detail_pinjam);
+        
+        $model->status = 2;
+
+        $model->save(false);
+
+        Yii::$app->session->setFlash('Berhasil', 'Barang sudah boleh dipinjam');
+
+
+        $value = DetailPinjam::findOne($id_detail_pinjam);
+
+        $inventaris_brg = InventarisBrg::findOne($value->id_inventaris_brg);        
+        
+        $inventaris_brg->jumlah_brg = ((integer) $inventaris_brg->jumlah_brg)-$value->jumlah;
+        
+        $inventaris_brg->jumlah_brg = (string) $inventaris_brg->jumlah_brg;
+        
+        $inventaris_brg->save();
+
+        
+        if (User::isAdmin()) {
+            return $this->redirect(Yii::$app->request->referrer);
+        } else {
+            return $this->redirect(['peminjaman/index']);
+        }
+    }
+    public function actionAccSebagian($id_detail_pinjam=null)
+    {
+        $model = DetailPinjam::findOne($id_detail_pinjam);
+        
+        $model->status = 2;
+
+        $model->save(false);
+
+        if (User::isAdmin()) {
+            return $this->redirect(Yii::$app->request->referrer);
+        } else {
+            return $this->redirect(['detail-pinjam/update',"id"=>$id_detail_pinjam]);
+        }
     }
 
 }

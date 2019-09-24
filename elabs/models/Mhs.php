@@ -80,4 +80,10 @@ class Mhs extends \yii\db\ActiveRecord
             ->andWhere(['id_mhs' => $this->id])
             ->all();
     }
+    public function FindAllJurusan()
+    {
+        return Jurusan::find()
+                ->andWhere(['id_jurusan' => 1])
+                ->all();
+    }
 }

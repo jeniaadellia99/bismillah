@@ -11,6 +11,8 @@ use yii\filters\VerbFilter;
 use app\models\User;
 use app\models\InventarisBrg;
 use app\models\DetailPinjam;
+use yii\data\ActiveDataProvider;
+use kartik\mpdf\Pdf;
 
 /**
  * PeminjamanController implements the CRUD actions for Peminjaman model.
@@ -41,6 +43,28 @@ class PeminjamanController extends Controller
         $searchModel = new PeminjamanSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+         if (Yii::$app->request->get('export-pdf-sudah')) {
+            return $this->exportPdf(Yii::$app->request->queryParams);
+        }
+
+         if (Yii::$app->request->get('export-pdf-semua')) {
+            return $this->exportPdfSemua(Yii::$app->request->queryParams);
+        }
+
+        if (Yii::$app->user->identity->id_user_role == 3) {
+             $query = Peminjaman::find()->andWhere(['id_dosen_staf' => Yii::$app->user->identity->id_dosen_staf]);
+           $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        }
+
+        if (Yii::$app->user->identity->id_user_role == 2) {
+             $query = Peminjaman::find()->andWhere(['id_mhs' => Yii::$app->user->identity->id_mhs]);
+           $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -55,6 +79,10 @@ class PeminjamanController extends Controller
      */
     public function actionView($id)
     {
+         if (Yii::$app->request->get('export-pdf')) {
+            return $this->exportPdf(Yii::$app->request->queryParams);
+        }
+        
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -72,13 +100,25 @@ class PeminjamanController extends Controller
         if (User::isMhs())
         {
             $model->id_mhs = Yii::$app->user->identity->id_mhs;
+            $model->id_dosen_staf = '0';
+            $model->tgl_pinjam = date("Y-m-d H:i:s");
             $model->status = '1';
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                return $this->redirect(['view', 'id' => $model->id]);
             }
         }
         elseif (User::isAdmin()) {
+            $model->tgl_pinjam = date("Y-m-d H:i:s");
             $model->status = '2';
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+            }
+        }
+        elseif (User::isDosenStaf()) {
+            $model->id_dosen_staf = Yii::$app->user->identity->id_dosen_staf;
+            $model->id_mhs = '0';
+            $model->tgl_pinjam = date("Y-m-d H:i:s");
+            $model->status = '1';
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
             }
@@ -169,5 +209,245 @@ class PeminjamanController extends Controller
         } else {
             return $this->redirect(['peminjaman/index']);
         }
+    }
+
+    public function actionPdf($id)
+    {
+
+        $model = \app\models\Peminjaman::findOne($id);
+        $content = $this->renderPartial('/template/pengembalian', [
+                     'model' => $model,
+                     'id' => $id,
+
+                     ]);
+         $cssInline = <<<CSS
+        table {
+            *border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+        .table-pdf td, .table-pdf th {
+            padding: 10px;
+            border: 1px solid #0000;
+            text-align: center;
+        }
+        .table-pdf th {
+            border: 1px solid #0000;
+            background-color: #eee;
+            text-align: center;
+        }
+CSS;
+
+       
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8,
+            'marginLeft' => 10,
+            'marginRight' => 10,
+            // A4 paper format
+            'format' => Pdf::FORMAT_LEGAL,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+           
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Linen - Supervisi Outsourcing'],
+             // call mPDF methods on the fly
+            'methods' => [
+                'SetHeader'=> [null],
+                'SetFooter'=> [null],
+            ]
+
+        ]);
+
+        $date = date('Y-m-d His');
+
+        $pdf->filename = "Data Peminjaman - ".$date.".pdf";
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
+    }
+
+    public function actionPdfSudah()
+    {
+        $searchModel = new PeminjamanSearch();
+        $searchModel = Peminjaman::find()->where(['status'=>3])->all();       
+        $content = $this->renderPartial('/template/peminjaman',['model' => $searchModel]);
+
+        $cssInline = <<<CSS
+        table {
+            *border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+        .table-pdf td, .table-pdf th {
+            padding: 10px;
+            border: 1px solid #0000;
+            text-align: center;
+        }
+        .table-pdf th {
+            border: 1px solid #0000;
+            background-color: #eee;
+            text-align: center;
+        }
+CSS;
+
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8,
+            'marginLeft' => 10,
+            'marginRight' => 10,
+            // A4 paper format
+            'format' => Pdf::FORMAT_LEGAL,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_LANDSCAPE,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => $cssInline,
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Linen - Supervisi Outsourcing'],
+             // call mPDF methods on the fly
+            'methods' => [
+                'SetHeader'=> [null],
+                'SetFooter'=> [null],
+            ]
+        ]);
+
+        $date = date('Y-m-d His');
+
+        $pdf->filename = "Peminjaman-Sudah_Dikembalikan - ".$date.".pdf";
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
+    }
+     public function actionPdfSedang()
+    {
+        $searchModel = new PeminjamanSearch();
+        $searchModel = Peminjaman::find()->where(['status'=>2])->all();       
+        $content = $this->renderPartial('/template/peminjaman',['model' => $searchModel]);
+
+        $cssInline = <<<CSS
+        table {
+            *border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+        .table-pdf td, .table-pdf th {
+            padding: 10px;
+            border: 1px solid #0000;
+            text-align: center;
+        }
+        .table-pdf th {
+            border: 1px solid #0000;
+            background-color: #eee;
+            text-align: center;
+        }
+CSS;
+
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8,
+            'marginLeft' => 10,
+            'marginRight' => 10,
+            // A4 paper format
+            'format' => Pdf::FORMAT_LEGAL,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_LANDSCAPE,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => $cssInline,
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Linen - Supervisi Outsourcing'],
+             // call mPDF methods on the fly
+            'methods' => [
+                'SetHeader'=> [null],
+                'SetFooter'=> [null],
+            ]
+        ]);
+
+        $date = date('Y-m-d His');
+
+        $pdf->filename = "Peminjaman-Belum_Dikembalikan - ".$date.".pdf";
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
+    }
+      
+    public function exportPdfSemua($params)
+    {
+        $searchModel = new PeminjamanSearch();
+        $searchModel = $searchModel->getQuerySearch($params)->all();     
+        $content = $this->renderPartial('/template/peminjaman-all',['model' => $searchModel]);
+
+        $cssInline = <<<CSS
+        table {
+            *border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+        .table-pdf td, .table-pdf th {
+            padding: 10px;
+            border: 1px solid #0000;
+            text-align: center;
+        }
+        .table-pdf th {
+            border: 1px solid #0000;
+            background-color: #eee;
+            text-align: center;
+        }
+CSS;
+
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8,
+            'marginLeft' => 10,
+            'marginRight' => 10,
+            // A4 paper format
+            'format' => Pdf::FORMAT_LEGAL,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_LANDSCAPE,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => $cssInline,
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Linen - Supervisi Outsourcing'],
+             // call mPDF methods on the fly
+            'methods' => [
+                'SetHeader'=> [null],
+                'SetFooter'=> [null],
+            ]
+        ]);
+
+        $date = date('Y-m-d His');
+
+        $pdf->filename = "Peminjaman-Belum_Dikembalikan - ".$date.".pdf";
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
     }
 }

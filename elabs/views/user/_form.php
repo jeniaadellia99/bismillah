@@ -10,23 +10,65 @@ use kartik\select2\Select2;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<?php $form = ActiveForm::begin([
-    'layout'=>'horizontal',
-    'enableAjaxValidation'=>false,
-    'enableClientValidation'=>false,
-    'fieldConfig' => [
-        'horizontalCssClasses' => [
-           
-            'wrapper' => 'col-sm-4',
-            'error' => '',
-            'hint' => '',
-        ],
-    ]
-]); ?>
-
+<?php if (Yii::$app->user->identity->id_user_role == 1): ?>
 <div class="user-form">
-    <?php if (User::isAdmin()): ?>
-    <?= $form->errorSummary($model); ?>
+
+    <?php
+
+        if ($model->isNewRecord) {
+    ?>
+
+    <?php $form = ActiveForm::begin(); ?>
+
+    <?= $form->field($model, 'username')->textInput(['minlength' => 6, 'maxlength' => true]) ?>
+
+    <?= $form->field($model, 'password')->passwordInput(['minlength' => 6, 'maxlength' => true]) ?>
+
+    <?php /*<?= $form->field($model, 'id_anggota')->textInput() ?>*/ ?>
+    <?= $form->field($model, 'id_mhs')->widget(Select2::classname(), [
+        'data' =>  Mhs::getList(),
+        'options' => [
+          'placeholder' => '- Pilih Mahasiswa -',
+        ],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]); ?>
+
+    <?php /*<?= $form->field($model, 'id_petugas')->textInput() ?>*/ ?>
+    <?= $form->field($model, 'id_dosen_staf')->widget(Select2::classname(), [
+        'data' =>  DosenStaf::getList(),
+        'options' => [
+          'placeholder' => '- Pilih DosenStaf -',
+        ],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]); ?>
+
+    <?php /*<?= $form->field($model, 'id_user_role')->textInput() ?>*/ ?>
+    <?= $form->field($model, 'id_user_role')->widget(Select2::classname(), [
+        'data' =>  UserRole::getList(),
+        'options' => [
+          'placeholder' => '- Pilih Level User -',
+        ],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]); ?>
+
+    <div class="form-group">
+        <button type="button" class="btn btn-default" onclick="history.back()"><i class="fa fa-arrow-left"></i> Kembali</button>
+        <?= Html::submitButton('Simpan', ['class' => 'btn btn-success']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
+    <?php
+        } else {
+    ?>
+
+    <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
 
@@ -34,16 +76,29 @@ use kartik\select2\Select2;
         <button type="button" class="btn btn-default" onclick="history.back()"><i class="fa fa-arrow-left"></i> Kembali</button>
         <?= Html::submitButton('Simpan Username', ['class' => 'btn btn-success']) ?>
         <?= Html::a('<i class="fa fa-key"> Ganti Password</i>', ['change-password', 'id' => $model->id], ['class' => 'btn btn-primary']); ?>
-
     </div>
+
     <?php ActiveForm::end(); ?>
+
+    <?php   
+        }
+    ?>
+
 </div>
+
 <?php endif ?>
- <?php if (User::isMhs()): ?>
-    <div class="user-form">
+
+<!-- From petugas -->
+<?php if (Yii::$app->user->identity->id_user_role == 3 || Yii::$app->user->identity->id_user_role == 2): ?>
+<div class="user-form">
 
     <div class="form-group">
+        <?php if (User::isMhs()) { ?>
         <?= Html::a('<i class="fa fa-user"> Biodata</i>', ['mhs/view', 'id' => $model->id_mhs], ['class' => 'btn btn-primary']); ?>
+            <?php } ?>
+            <?php if (User::isDosenStaf()) { ?>
+        <?= Html::a('<i class="fa fa-user"> Biodata</i>', ['dosen-staf/view', 'id' => $model->id_dosen_staf], ['class' => 'btn btn-primary']); ?>
+            <?php } ?>
         <?= Html::a('<i class="fa fa-key"> Ganti Password</i>', ['change-password', 'id' => $model->id], ['class' => 'btn btn-primary']); ?>
     </div>
 
@@ -51,7 +106,7 @@ use kartik\select2\Select2;
 
     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
 
-     <div class="form-group">
+    <div class="form-group">
         <button type="button" class="btn btn-default" onclick="history.back()"><i class="fa fa-arrow-left"></i> Kembali</button>
         <?= Html::submitButton('Simpan Username', ['class' => 'btn btn-success']) ?>
     </div>
@@ -59,5 +114,4 @@ use kartik\select2\Select2;
     <?php ActiveForm::end(); ?>
 
 </div>
-
-     <?php endif ?>
+<?php endif ?>

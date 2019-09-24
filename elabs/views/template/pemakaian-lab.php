@@ -16,9 +16,11 @@
 		<tr>
 			<th><?= strtoupper("No") ?></th>
 			<th><?= strtoupper("Nama Pengguna") ?></th>
+			<th><?= strtoupper("Nomor Komputer") ?></th>
 			<th><?= strtoupper("Nama Laboratorium") ?></th>
 			<th><?= strtoupper("Mata Kuliah") ?></th>
-			<th><?= strtoupper("Tanggal") ?></th>
+			<th><?= strtoupper("Waktu Masuk") ?></th>
+			<th><?= strtoupper("Waktu Keluar") ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -26,10 +28,11 @@
 		<tr>
 			<td><?= $i++ ?></td>
 			<td><?= $data->nama_pengguna ?></td>
-			<td><?= $data->nama_lab ?></td>
+			<td><?= $data->no_komputer ?></td>
+			<td><?= @$data->lab->nama ?></td>
 			<td><?= $data->mata_kuliah ?></td>
 			<td><?= $data->date ?></td>
-
+			<td><?= $data->tgl_keluar ?></td>
 		</tr>
 		<?php } ?>
 	</tbody>

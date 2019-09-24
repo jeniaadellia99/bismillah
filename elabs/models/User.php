@@ -31,8 +31,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password', 'id_mhs', 'id_user_role', 'token'], 'required'],
-            [['id', 'id_mhs', 'id_user_role'], 'integer'],
+            [['username', 'password', 'id_mhs', 'id_dosen_staf', 'id_user_role', 'token'], 'required'],
+            [['id', 'id_mhs', 'id_dosen_staf', 'id_user_role'], 'integer'],
             [['username', 'password'], 'string', 'max' => 255],
             [['token'], 'string', 'max' => 50],
             [['id'], 'unique'],
@@ -49,6 +49,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'username' => 'Username',
             'password' => 'Password',
             'id_mhs' => 'Mahasiswa',
+            'id_dosen_staf' => 'Dosen Staf',
             'id_user_role' => 'User Role',
             'token' => 'Token',
         ];
@@ -121,6 +122,22 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
     }
 
+
+    public static function isDosenStaf()
+    {
+        // Jika bila user login trs keluar dan user terus masuk lewat url itu tidak bisa maka balik ke login.
+        if (Yii::$app->user->isGuest) {
+           return false;
+        }
+
+        // Buat id akses login user
+        if (($user = User::findOne(Yii::$app->user->identity->id_user_role == 3))) {
+            return $user;
+        } else {
+            return false;
+        }
+    }
+
     public static function getFotoAdmin($htmlOptions=[])
     {
         return Html::img('@web/img/polindra.png', $htmlOptions);
@@ -133,7 +150,20 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             ->one();
 
         if ($query->foto != null) {
-            return Html::img('@web/upload/mhs/' . $query->foto, $htmlOptions);
+        return Html::img('@web/upload/mhs/' . $query->foto, $htmlOptions);
+        } else {
+            return Html::img('@web/foto/no-images.png', $htmlOptions);
+        }
+    }
+
+    public static function getFotoDosenStaf($htmlOptions=[])
+    {
+        $query = DosenStaf::find()
+            ->andWhere(['id' => Yii::$app->user->identity->id_dosen_staf])
+            ->one();
+
+        if ($query->foto != null) {
+           return Html::img('@web/upload/dosen' . $query->foto, $htmlOptions);
         } else {
             return Html::img('@web/foto/no-images.png', $htmlOptions);
         }
@@ -151,6 +181,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getMhs()
     {
         return $this->hasOne(Mhs::className(), ['id' => 'id_mhs']);
+    }
+
+     public function getDosenStaf()
+    {
+        return $this->hasOne(DosenStaf::className(), ['id' => 'id_dosen_staf']);
     }
 
     public function getUserRole()

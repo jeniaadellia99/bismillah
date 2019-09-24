@@ -1,0 +1,258 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x033ed94d, pid=6880, tid=0x000000e0
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_221-b11) (build 1.8.0_221-b11)
+# Java VM: Java HotSpot(TM) Client VM (25.221-b11 mixed mode windows-x86 )
+# Problematic frame:
+# j  java.lang.Throwable.fillInStackTrace(I)Ljava/lang/Throwable;+0
+#
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+# If you would like to submit a bug report, please visit:
+#   
+#
+
+
+ [
+V  [jvm.dll+0x2252be]
+V  [jvm.dll+0x15c4ce]
+V  [jvm.dll+0xddaeb]
+V  [jvm.dll+0xddefa]
+C  [java.dll+0xb54e]
+C  [java.dll+0xca97]
+C  0x1747d570
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x02743000 JavaThread "DestroyJavaVM" [_thread_blocked, id=9836, stack(0x029e0000,0x02ae0000)]
+=>0x15cdc000 JavaThread "AWT-EventQueue-0" [_thread_in_Java, id=224, stack(0x17380000,0x17480000)]
+  0x15cdb800 JavaThread "AWT-Shutdown" [_thread_blocked, id=8356, stack(0x17280000,0x17380000)]
+  0x15c58800 JavaThread "AWT-Windows" daemon [_thread_in_native, id=7024, stack(0x16b80000,0x16c80000)]
+  0x15c57400 JavaThread "Java2D Disposer" daemon [_thread_blocked, id=4460, stack(0x16900000,0x16a00000)]
+  0x15b8c400 JavaThread "Service Thread" daemon [_thread_blocked, id=7792, stack(0x16590000,0x16690000)]
+  0x15b8a400 JavaThread "C1 CompilerThread0" daemon [_thread_blocked, id=8884, stack(0x16450000,0x16550000)]
+  0x15b8f400 JavaThread "Attach Listener" daemon [_thread_blocked, id=7368, stack(0x16350000,0x16450000)]
+  0x15b8e400 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=4252, stack(0x16250000,0x16350000)]
+  0x15b79800 JavaThread "Finalizer" daemon [_thread_blocked, id=8768, stack(0x15f60000,0x16060000)]
+  0x15b64c00 JavaThread "Reference Handler" daemon [_thread_blocked, id=8420, stack(0x15e60000,0x15f60000)]
+
+Other Threads:
+  0x0283cc00 VMThread [stack: 0x15a60000,0x15b60000] [id=9168]
+  0x15bbe000 WatcherThread [stack: 0x166d0000,0x167d0000] [id=9884]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+OutOfMemory and StackOverflow Exception counts:
+OutOfMemoryError java_heap_errors=3
+
+Heap:
+ def new generation   total 4992K, used 44K [0x05600000, 0x05b60000, 0x0ab50000)
+  eden space 4480K,   1% used [0x05600000, 0x0560b360, 0x05a60000)
+  from space 512K,   0% used [0x05a60000, 0x05a60000, 0x05ae0000)
+  to   space 512K,   0% used [0x05ae0000, 0x05ae0000, 0x05b60000)
+ tenured generation   total 10944K, used 1115K [0x0ab50000, 0x0b600000, 0x15600000)
+   the space 10944K,  10% used [0x0ab50000, 0x0ac66f40, 0x0ac67000, 0x0b600000)
+ Metaspace       used 5312K, capacity 5495K, committed 5632K, reserved 8576K
+
+Card table byte_map: [0x05460000,0x054f0000] byte_map_base: 0x05435000
+
+Polling page: 0x005f0000
+
+CodeCache: size=32768Kb used=804Kb max_used=804Kb free=31963Kb
+ bounds [0x033e0000, 0x034b0000, 0x053e0000]
+ total_blobs=324 nmethods=131 adapters=124
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 23.716 Thread 0x15b8a400  127             java.util.HashMap::afterNodeInsertion (1 bytes)
+Event: 23.716 Thread 0x15b8a400 nmethod 127 0x034a7e48 code [0x034a7f40, 0x034a7fc0]
+Event: 23.731 Thread 0x15b8a400  128             java.lang.Float::compare (46 bytes)
+Event: 23.732 Thread 0x15b8a400 nmethod 128 0x034a8008 code [0x034a8100, 0x034a8240]
+Event: 23.732 Thread 0x15b8a400  129             java.util.Hashtable::addEntry (87 bytes)
+Event: 23.732 Thread 0x15b8a400 nmethod 129 0x034a8288 code [0x034a83b0, 0x034a85e8]
+Event: 23.733 Thread 0x15b8a400  130             java.util.Hashtable$Entry::<init> (26 bytes)
+Event: 23.733 Thread 0x15b8a400 nmethod 130 0x034a8808 code [0x034a8900, 0x034a89b0]
+Event: 24.275 Thread 0x15b8a400  131             java.lang.AbstractStringBuilder::newCapacity (39 bytes)
+Event: 24.275 Thread 0x15b8a400 nmethod 131 0x034a8dc8 code [0x034a8ed0, 0x034a900c]
+
+GC Heap History (6 events):
+Event: 23.850 GC heap before
+{Heap before GC invocations=0 (full 0):
+ def new generation   total 4928K, used 3474K [0x05600000, 0x05b50000, 0x0ab50000)
+  eden space 4416K,  78% used [0x05600000, 0x05964b90, 0x05a50000)
+  from space 512K,   0% used [0x05a50000, 0x05a50000, 0x05ad0000)
+  to   space 512K,   0% used [0x05ad0000, 0x05ad0000, 0x05b50000)
+ tenured generation   total 10944K, used 0K [0x0ab50000, 0x0b600000, 0x15600000)
+   the space 10944K,   0% used [0x0ab50000, 0x0ab50000, 0x0ab50200, 0x0b600000)
+ Metaspace       used 5313K, capacity 5475K, committed 5504K, reserved 8576K
+Event: 24.068 GC heap after
+Heap after GC invocations=1 (full 1):
+ def new generation   total 4992K, used 0K [0x05600000, 0x05b60000, 0x0ab50000)
+  eden space 4480K,   0% used [0x05600000, 0x05600000, 0x05a60000)
+  from space 512K,   0% used [0x05a60000, 0x05a60000, 0x05ae0000)
+  to   space 512K,   0% used [0x05ae0000, 0x05ae0000, 0x05b60000)
+ tenured generation   total 10944K, used 1115K [0x0ab50000, 0x0b600000, 0x15600000)
+   the space 10944K,  10% used [0x0ab50000, 0x0ac66f40, 0x0ac67000, 0x0b600000)
+ Metaspace       used 5313K, capacity 5475K, committed 5504K, reserved 7552K
+}
+Event: 24.068 GC heap before
+{Heap before GC invocations=1 (full 1):
+ def new generation   total 4992K, used 0K [0x05600000, 0x05b60000, 0x0ab50000)
+  eden space 4480K,   0% used [0x05600000, 0x05600000, 0x05a60000)
+  from space 512K,   0% used [0x05a60000, 0x05a60000, 0x05ae0000)
+  to   space 512K,   0% used [0x05ae0000, 0x05ae0000, 0x05b60000)
+ tenured generation   total 10944K, used 1115K [0x0ab50000, 0x0b600000, 0x15600000)
+   the space 10944K,  10% used [0x0ab50000, 0x0ac66f40, 0x0ac67000, 0x0b600000)
+ Metaspace       used 5315K, capacity 5475K, committed 5504K, reserved 10624K
+Event: 24.076 GC heap after
+Heap after GC invocations=2 (full 2):
+ def new generation   total 4992K, used 0K [0x05600000, 0x05b60000, 0x0ab50000)
+  eden space 4480K,   0% used [0x05600000, 0x05600000, 0x05a60000)
+  from space 512K,   0% used [0x05a60000, 0x05a60000, 0x05ae0000)
+  to   space 512K,   0% used [0x05ae0000, 0x05ae0000, 0x05b60000)
+ tenured generation   total 10944K, used 1115K [0x0ab50000, 0x0b600000, 0x15600000)
+   the space 10944K,  10% used [0x0ab50000, 0x0ac66f40, 0x0ac67000, 0x0b600000)
+ Metaspace       used 5310K, capacity 5463K, committed 5504K, reserved 7552K
+}
+Event: 24.220 GC heap before
+{Heap before GC invocations=2 (full 2):
+ def new generation   total 4992K, used 0K [0x05600000, 0x05b60000, 0x0ab50000)
+  eden space 4480K,   0% used [0x05600000, 0x05600000, 0x05a60000)
+  from space 512K,   0% used [0x05a60000, 0x05a60000, 0x05ae0000)
+  to   space 512K,   0% used [0x05ae0000, 0x05ae0000, 0x05b60000)
+ tenured generation   total 10944K, used 1115K [0x0ab50000, 0x0b600000, 0x15600000)
+   the space 10944K,  10% used [0x0ab50000, 0x0ac66f40, 0x0ac67000, 0x0b600000)
+ Metaspace       used 5310K, capacity 5463K, committed 5504K, reserved 9600K
+Event: 24.228 GC heap after
+Heap after GC invocations=3 (full 3):
+ def new generation   total 4992K, used 0K [0x05600000, 0x05b60000, 0x0ab50000)
+  eden space 4480K,   0% used [0x05600000, 0x05600000, 0x05a60000)
+  from space 512K,   0% used [0x05a60000, 0x05a60000, 0x05ae0000)
+  to   space 512K,   0% used [0x05ae0000, 0x05ae0000, 0x05b60000)
+ tenured generation   total 10944K, used 1115K [0x0ab50000, 0x0b600000, 0x15600000)
+   the space 10944K,  10% used [0x0ab50000, 0x0ac66f40, 0x0ac67000, 0x0b600000)
+ Metaspace       used 5310K, capacity 5463K, committed 5504K, reserved 7552K
+}
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 22.734 Thread 0x02743000 Exception <a 'java/lang/ClassNotFoundException': javax/swing/JTreeCell> (0x058d6500) thrown at [C:\re\workspace\8-2-build-windows-i586-cygwin\jdk8u221\13320\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]
+Event: 22.735 Thread 0x02743000 Exception <a 'java/lang/ClassNotFoundException': TreeCell> (0x058d6948) thrown at [C:\re\workspace\8-2-build-windows-i586-cygwin\jdk8u221\13320\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]
+Event: 22.741 Thread 0x02743000 Exception <a 'java/lang/ClassNotFoundException': RootPane> (0x058d72c0) thrown at [C:\re\workspace\8-2-build-windows-i586-cygwin\jdk8u221\13320\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]
+Event: 24.228 Thread 0x15cdc000 Exception <a 'java/lang/OutOfMemoryError'> (0x0ab54258) thrown at [C:\re\workspace\8-2-build-windows-i586-cygwin\jdk8u221\13320\hotspot\src\share\vm\memory\metaspace.cpp, line 3632]
+Event: 24.228 Thread 0x15cdc000 Exception <a 'java/lang/OutOfMemoryError'> (0x0ab54258) thrown at [C:\re\workspace\8-2-build-windows-i586-cygwin\jdk8u221\13320\hotspot\src\share\vm\prims\jvm.cpp, line 1506]
+Event: 24.228 Thread 0x15cdc000 Exception <a 'java/lang/OutOfMemoryError'> (0x0ab54258) thrown at [C:\re\workspace\8-2-build-windows-i586-cygwin\jdk8u221\13320\hotspot\src\share\vm\prims\jvm.cpp, line 1506]
+Event: 24.229 Thread 0x15cdc000 Exception <a 'java/io/IOException'> (0x05600278) thrown at [C:\re\workspace\8-2-build-windows-i586-cygwin\jdk8u221\13320\hotspot\src\share\vm\prims\jni.cpp, line 710]
+Event: 24.274 Thread 0x15cdc000 Exception <a 'java/io/IOException'> (0x056009d8) thrown at [C:\re\workspace\8-2-build-windows-i586-cygwin\jdk8u221\13320\hotspot\src\share\vm\prims\jni.cpp, line 710]
+Event: 24.275 Thread 0x15cdc000 Exception <a 'java/io/IOException'> (0x05600c50) thrown at [C:\re\workspace\8-2-build-windows-i586-cygwin\jdk8u221\13320\hotspot\src\share\vm\prims\jni.cpp, line 710]
+Event: 24.275 Thread 0x15cdc000 Exception <a 'java/io/IOException'> (0x05600e98) thrown at [C:\re\workspace\8-2-build-windows-i586-cygwin\jdk8u221\13320\hotspot\src\share\vm\prims\jni.cpp, line 710]
+
+Events (10 events):
+Event: 24.228 loading class java/awt/event/KeyEvent done
+Event: 24.228 Executing VM operation: CollectForMetadataAllocation done
+Event: 24.229 loading class java/io/InterruptedIOException
+Event: 24.229 loading class java/io/InterruptedIOException done
+Event: 24.229 loading class java/lang/Throwable$WrappedPrintStream
+Event: 24.252 loading class java/lang/Throwable$PrintStreamOrWriter
+Event: 24.255 loading class java/lang/Throwable$PrintStreamOrWriter done
+Event: 24.255 loading class java/lang/Throwable$WrappedPrintStream done
+Event: 24.255 loading class java/util/IdentityHashMap$KeySet
+Event: 24.274 loading class java/util/IdentityHashMap$KeySet done
+
+
+Dynamic libraries:
+0x00400000 - 0x00431000 	C:\Users\lenovo\Music\mencoba\dist\mencoba.exe
+0x774d0000 - 0x77660000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x76100000 - 0x761e0000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x75c50000 - 0x75e34000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x76240000 - 0x763cd000 	C:\WINDOWS\System32\USER32.dll
+0x763d0000 - 0x763e7000 	C:\WINDOWS\System32\win32u.dll
+0x76060000 - 0x76082000 	C:\WINDOWS\System32\GDI32.dll
+0x75e70000 - 0x75fd4000 	C:\WINDOWS\System32\gdi32full.dll
+0x77360000 - 0x773dd000 	C:\WINDOWS\System32\msvcp_win.dll
+0x75940000 - 0x75a5d000 	C:\WINDOWS\System32\ucrtbase.dll
+0x75fe0000 - 0x76058000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x74370000 - 0x7442f000 	C:\WINDOWS\System32\msvcrt.dll
+0x75c00000 - 0x75c44000 	C:\WINDOWS\System32\sechost.dll
+0x744a0000 - 0x74560000 	C:\WINDOWS\System32\RPCRT4.dll
+0x73d90000 - 0x73db0000 	C:\WINDOWS\System32\SspiCli.dll
+0x73d80000 - 0x73d8a000 	C:\WINDOWS\System32\CRYPTBASE.dll
+0x74440000 - 0x74497000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x699a0000 - 0x69a2f000 	C:\WINDOWS\WinSxS\x86_microsoft.windows.common-controls_6595b64144ccf1df_5.82.17134.950_none_4100edf0451088e7\COMCTL32.dll
+0x745c0000 - 0x745e6000 	C:\WINDOWS\System32\IMM32.DLL
+0x54830000 - 0x54860000 	C:\Program Files (x86)\Java\jre1.8.0_221\bin\splashscreen.dll
+0x54770000 - 0x5482f000 	C:\WINDOWS\SYSTEM32\MSVCR100.dll
+0x72bf0000 - 0x72c6c000 	C:\WINDOWS\system32\uxtheme.dll
+0x76910000 - 0x76b6c000 	C:\WINDOWS\System32\combase.dll
+0x54390000 - 0x54765000 	C:\Program Files (x86)\Java\jre1.8.0_221\bin\client\jvm.dll
+0x76be0000 - 0x76be6000 	C:\WINDOWS\System32\PSAPI.DLL
+0x739d0000 - 0x739f4000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x72b40000 - 0x72b48000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x739a0000 - 0x739c3000 	C:\WINDOWS\SYSTEM32\WINMMBASE.dll
+0x70e00000 - 0x70e08000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x76090000 - 0x760f7000 	C:\WINDOWS\System32\ws2_32.DLL
+0x77320000 - 0x77359000 	C:\WINDOWS\System32\cfgmgr32.dll
+0x76e70000 - 0x76fb3000 	C:\WINDOWS\System32\MSCTF.dll
+0x76d80000 - 0x76e16000 	C:\WINDOWS\System32\OLEAUT32.dll
+0x62370000 - 0x6237c000 	C:\Program Files (x86)\Java\jre1.8.0_221\bin\verify.dll
+0x54360000 - 0x54381000 	C:\Program Files (x86)\Java\jre1.8.0_221\bin\java.dll
+0x76900000 - 0x7690f000 	C:\WINDOWS\System32\kernel.appcore.dll
+0x698d0000 - 0x6994d000 	C:\WINDOWS\System32\TextInputFramework.dll
+0x69470000 - 0x696cd000 	C:\WINDOWS\System32\CoreUIComponents.dll
+0x77290000 - 0x77318000 	C:\WINDOWS\System32\SHCORE.dll
+0x73530000 - 0x73559000 	C:\WINDOWS\SYSTEM32\ntmarta.dll
+0x69840000 - 0x698cb000 	C:\WINDOWS\System32\CoreMessaging.dll
+0x6c9d0000 - 0x6caa6000 	C:\WINDOWS\SYSTEM32\wintypes.dll
+0x728e0000 - 0x72903000 	C:\WINDOWS\system32\dwmapi.dll
+0x77020000 - 0x7711c000 	C:\WINDOWS\System32\ole32.dll
+0x77170000 - 0x771f3000 	C:\WINDOWS\System32\clbcatq.dll
+0x54340000 - 0x54354000 	C:\Program Files (x86)\Java\jre1.8.0_221\bin\zip.dll
+0x745f0000 - 0x7593a000 	C:\WINDOWS\System32\SHELL32.dll
+0x73db0000 - 0x7436a000 	C:\WINDOWS\System32\windows.storage.dll
+0x76b70000 - 0x76bb5000 	C:\WINDOWS\System32\shlwapi.dll
+0x75e40000 - 0x75e58000 	C:\WINDOWS\System32\profapi.dll
+0x77120000 - 0x77165000 	C:\WINDOWS\System32\powrprof.dll
+0x76bf0000 - 0x76bf8000 	C:\WINDOWS\System32\FLTLIB.DLL
+0x541f0000 - 0x54337000 	C:\Program Files (x86)\Java\jre1.8.0_221\bin\awt.dll
+0x62f40000 - 0x62fdd000 	C:\WINDOWS\SYSTEM32\apphelp.dll
+0x53db0000 - 0x53dea000 	C:\Program Files (x86)\Java\jre1.8.0_221\bin\fontmanager.dll
+
+VM Arguments:
+jvm_args: -Dj2e.class.path=C:\Users\lenovo\Music\mencoba\dist\mencoba.exe; -Dj2e.app.path=C:\Users\lenovo\Music\mencoba\dist\mencoba.exe -Dapplication.home=C:\Users\lenovo\Music\mencoba\dist\ -Dj2e.is.elevated=true 
+java_command: <unknown>
+java_class_path (initial): C:\Users\lenovo\Music\mencoba\dist\mencoba.exe;
+Launcher Type: generic
+
+Environment Variables:
+PATH=C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\xampp\php;C:\ProgramData\ComposerSetup\bin;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Users\lenovo\AppData\Roaming\Composer\vendor\bin;C:\Users\lenovo\AppData\Local\Microsoft\WindowsApps;C:\Users\lenovo\AppData\Roaming\npm;C:\Program Files (x86)\Jar2Exe Wizard\
+USERNAME=lenovo
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 42 Stepping 7, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10.0 , 64 bit Build 17134 (10.0.17134.753)
+
+CPU:total 4 (initial active 4) (2 cores per cpu, 2 threads per core) family 6 model 42 stepping 7, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, clmul, ht, tsc, tscinvbit
+
+Memory: 4k page, physical 2712472k(303264k free), swap 11101080k(0k free)
+
+vm_info: Java HotSpot(TM) Client VM (25.221-b11) for windows-x86 JRE (1.8.0_221-b11), built on Jul  4 2019 19:25:56 by "java_re" with MS VC++ 10.0 (VS2010)
+
+time: Mon Sep 09 13:54:37 2019
+timezone: SE Asia Standard Time
+elapsed time: 24 seconds (0d 0h 0m 24s)
+

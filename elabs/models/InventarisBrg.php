@@ -59,7 +59,7 @@ class InventarisBrg extends \yii\db\ActiveRecord
 
      public static function getList()
     {
-        return \yii\helpers\ArrayHelper::map(self::find()->all(), 'id', 'kode_brg');
+        return \yii\helpers\ArrayHelper::map(self::find()->all(), 'id', 'nama_brg');
     }
 
     public function getKategoriBrg()

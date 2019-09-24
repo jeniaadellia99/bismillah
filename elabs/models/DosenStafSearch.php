@@ -18,7 +18,7 @@ class DosenStafSearch extends DosenStaf
     {
         return [
             [['id'], 'integer'],
-            [['nik', 'nidn', 'nip'], 'safe'],
+            [['nik', 'nidn', 'nip', 'foto'], 'safe'],
         ];
     }
 
@@ -62,6 +62,7 @@ class DosenStafSearch extends DosenStaf
             'nidn' => $this->nidn,
             'nip' => $this->nip,
             'nik' => $this->nik,
+            'foto' => $this->foto,
         ]);
 
         return $dataProvider;

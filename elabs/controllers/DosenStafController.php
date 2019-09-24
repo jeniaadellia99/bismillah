@@ -8,6 +8,9 @@ use app\models\DosenStafSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\User;
+use yii\web\UploadedFile;
+use yii\web\Response;
 
 /**
  * DosenStafController implements the CRUD actions for DosenStaf model.
@@ -66,7 +69,34 @@ class DosenStafController extends Controller
     {
         $model = new DosenStaf();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+       // Membuat validasi untuk di from tertentu yang sudah ada di databases tidak bisa dibuat kembali.
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            // ambil file berkas dan file sampul yg ada di _from.
+            $foto = UploadedFile::getInstance($model, 'foto');
+            // merubah nama filenya.
+            $model->foto = time() . '_' . $foto->name;
+            // lokasi simpan file.
+            $foto->saveAs(Yii::$app->basePath . '/web/upload/dosen' . $model->foto);
+
+            $model->save();
+
+            $user = new User();
+
+            $user->username = $model->nama;
+            $user->password = $model->nik;
+            $user->id_dosen_staf = $model->id;
+            $user->id_user_role = 3;
+            $user->id_mhs = 0;
+                      
+            $user->token = Yii::$app->getSecurity()->generateRandomString ( $length = 50 );
+            
+            $user->save();
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

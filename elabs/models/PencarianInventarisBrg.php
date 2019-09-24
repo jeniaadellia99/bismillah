@@ -44,13 +44,14 @@ class PencarianInventarisBrg extends InventarisBrg
     {
         $query = InventarisBrg::find();
 
+
         // add conditions that should always apply here
 
         // $dataProvider = new ActiveDataProvider([
         //     'query' => $query,
         // ]);
 
-         $dataProvider = new ActiveDataProvider([
+        $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
                     'pageSize' => 6

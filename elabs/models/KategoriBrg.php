@@ -60,5 +60,11 @@ class KategoriBrg extends \yii\db\ActiveRecord
     {
         return $this->hasMany(InventarisBrg::class, ['id_kategori_brg' => 'id']);
     }
+    public function getJumlahBarang()
+    {
+        return InventarisBrg::find()
+            ->andWhere(['id_kategori_brg' => $this->id])
+            ->count();
+    }
 
 }

@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\KategoriBrg;
+use app\models\User;
 
 
 /* @var $this yii\web\View */
@@ -13,10 +14,13 @@ $this->params['breadcrumbs'][] = ['label' => 'Inventaris Barang', 'url' => ['ind
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);?>
 <div class="inventaris-brg-view box box-primary">
+    <?php if (User::isAdmin()) { ?>
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], ['class' => 'btn btn-danger','data' => ['confirm' => 'Are you sure you want to delete this item?','method' => 'post',],]) ?>
     </p>
+
+<?php  } ?>
 
     <?= DetailView::widget([
         'model' => $model,

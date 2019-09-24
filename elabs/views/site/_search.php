@@ -17,7 +17,8 @@ use yii\widgets\ActiveForm;
     ]); ?>
 
     <?= $form->field($model, 'pencarian_barang')->label(''); ?>
-
+    
+   
     <?php ActiveForm::end(); ?>
 
 </div>

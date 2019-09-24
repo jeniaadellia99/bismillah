@@ -1,11 +1,21 @@
 
+import comboboxdb.ModelsLab;
+import java.awt.List;
 import java.awt.Toolkit;
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /*
@@ -20,14 +30,36 @@ import javax.swing.JOptionPane;
  */
 public class mencoba extends javax.swing.JFrame {
 
+    private int id;
+    private String tglkl;
+    private ArrayList<Integer> id_lab = new ArrayList<Integer>();
+    
+    
+
+    ArrayList<ModelsLab> Mlab = new ArrayList<>();
+    private Object st;
+    
     /**
      * Creates new form mencoba
      */
     public mencoba() {
         setIcon();
+//        setModel();
         initComponents();
+        tampil();
+        
+        
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        tftgl.setText(mencoba.now());
+        tglkl = String.valueOf(mencoba.now());
+        
+//        JComboBox combobox = new JComboBox();
+//        combobox.addItem("Agung");
+//        combobox.addItem("Jenii");
+//        for (int i=1;i<=10;i++){
+//            combobox.addItem(i);
+//        }
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -38,19 +70,25 @@ public class mencoba extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        text1 = new javax.swing.JTextField();
         text2 = new javax.swing.JTextField();
-        text3 = new javax.swing.JTextField();
         text4 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLabel5 = new javax.swing.JLabel();
+        tftgl = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        text5 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        cbNama = new javax.swing.JComboBox();
+        jLabel8 = new javax.swing.JLabel();
+        jSpinner1 = new javax.swing.JSpinner();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(241, 196, 15));
 
@@ -65,24 +103,45 @@ public class mencoba extends javax.swing.JFrame {
             .addGap(0, 478, Short.MAX_VALUE)
         );
 
+        jPanel4.setBackground(new java.awt.Color(153, 153, 0));
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 280, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 420, Short.MAX_VALUE)
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel2.setBackground(new java.awt.Color(0, 204, 255));
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setText("Nama");
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Nama");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 130, -1, -1));
 
-        jLabel2.setText("Kode Lab");
-
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Nama Lab");
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 180, -1, -1));
 
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Mata Kuliah");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 230, -1, -1));
 
         text2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 text2ActionPerformed(evt);
             }
         });
+        jPanel2.add(text2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 150, 260, -1));
+        jPanel2.add(text4, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 250, 260, -1));
 
         jButton1.setText("Simpan");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -95,123 +154,204 @@ public class mencoba extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 340, 140, -1));
 
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Tanggal");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 270, -1, 20));
 
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/laptop.png"))); // NOI18N
-        jLabel6.setText(" ");
+        tftgl.setEditable(false);
+        tftgl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tftglActionPerformed(evt);
+            }
+        });
+        jPanel2.add(tftgl, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 300, 260, -1));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(57, 57, 57)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(text4)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 111, Short.MAX_VALUE))
-                            .addComponent(text3)
-                            .addComponent(text2)
-                            .addComponent(text1))
-                        .addGap(188, 188, 188))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel2)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(159, 159, 159)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(189, 189, 189)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(text1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(text2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(text3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(text4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(44, 44, 44)
-                .addComponent(jButton1)
-                .addContainerGap(76, Short.MAX_VALUE))
-        );
+        jLabel6.setBackground(new java.awt.Color(204, 204, 0));
+        jLabel6.setFont(new java.awt.Font("Wide Latin", 0, 24)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("ELABS");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 469, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        text5.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                text5KeyTyped(evt);
+            }
+        });
+        jPanel2.add(text5, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 90, 40, 30));
+
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("No Komputer");
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 100, -1, -1));
+
+        jButton2.setText("Keluar");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 380, -1, -1));
+
+        cbNama.setToolTipText("");
+        cbNama.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbNamaActionPerformed(evt);
+            }
+        });
+        jPanel2.add(cbNama, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 200, -1, -1));
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iya.jpeg"))); // NOI18N
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(-30, -20, -1, -1));
+        jPanel2.add(jSpinner1, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 210, -1, -1));
+
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 420));
+
+        jPanel3.setLayout(new java.awt.BorderLayout());
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-190, 0, -1, 421));
+
+        jLabel7.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel7.setFont(new java.awt.Font("Wide Latin", 3, 24)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel7.setText("ELABS");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+      
+//public void tampil_combo(){
+//    try{
+//         java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost/tugas_akhir", "root", "");
+//            Statement smt = con.createStatement();
+//            String sql = "select nama from lab ";
+//        try (ResultSet rs = st.) {
+//            while(rs.next()){
+//                Object[] ob = new Object[3];
+//                ob[0] = rs.getString(1);
+//                ob[1] = rs.getString(1);
+//                ob[2] = rs.getString(1);
+//                ComboBox.addItem(ob[0]);
+//            }
+//        }
+//    st.close();
+//    }catch (Exception e){
+//        System.out.printIn(e.getMessage());
+//    }
+//}
+
+public void tampil(){
+        try {
+            java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost/tugas_akhir", "root", "");
+            Statement smt = con.createStatement();
+            String sql = "select * from lab";
+            ResultSet res = smt.executeQuery(sql);
+            
+            while (res.next()) {
+                Object[] ob = new Object[3];
+//                ob[0] = res.getInt(1);
+//                ob[1] = res.getString(2);
+                id_lab.add(res.getInt(1));
+                cbNama.addItem(res.getString(2));
+            }
+            res.close();
+            smt.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(mencoba.class.getName()).log(Level.SEVERE, null, ex);
+        }
+}
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        // TODO add your handling code here:
+        try {
+            java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost/tugas_akhir", "root", "");
+            Statement smt = con.createStatement();
+            
+
+            
+            String sql = "insert into pemakaian_lab (id,nama_pengguna,no_komputer,id_lab,mata_kuliah,date) values " + "(NULL,'"+text2.getText()+"','"+text5.getText()+"','"+id_lab.get(cbNama.getSelectedIndex())+"','"+text4.getText()+"','"+mencoba.now() + "') " ;
+            //String sql = "insert into pemakaian_lab (id,kode_lab,nama_lab,mata_kuliah,date) values " + "('"+text1.getText()+"', '"+text2.getText()+"', '"+text3.getText()+"', '"text4.getText()"', '"+tanggal+"')";
+            smt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs=smt.getGeneratedKeys();
+		
+            if(rs.next()){
+                id=rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(mencoba.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        // TODO add your handling code here:
+        if (text2.getText().equals("")){
+            JOptionPane.showMessageDialog(this, "Nama Harus diisi");
+        }else if (cbNama.getSelectedItem().equals("")){
+            JOptionPane.showMessageDialog(this, "nama lab Harus diisi");
+        }
+        else if (text4.getText().equals("")){
+            JOptionPane.showMessageDialog(this, "mata kuliah Harus diisi");
+                }else{
+
+            JOptionPane.showMessageDialog(this, "Welcome");
+            this.setState(this.ICONIFIED);
+        }
+    }//GEN-LAST:event_jButton1MouseClicked
 
     private void text2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_text2ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-                                                    
-                // TODO add your handling code here:
-                String tampilan = "yyyy-MM-dd" ;
-                SimpleDateFormat fm = new SimpleDateFormat(tampilan);
-                String tanggal = String.valueOf(fm.format(jDateChooser1.getDate()));
-                try {
-                    java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost/tugas_akhir", "root", "");
-                    Statement smt = con.createStatement();
-                       String sql = "insert into pemakaian_lab (id,kode_lab,nama_lab,mata_kuliah,date) values " + "(NULL,'"+text2.getText()+"','"+text3.getText()+"','"+text3.getText()+"','"+tanggal + "') " ;
-                    //String sql = "insert into pemakaian_lab (id,kode_lab,nama_lab,mata_kuliah,date) values " + "('"+text1.getText()+"', '"+text2.getText()+"', '"+text3.getText()+"', '"text4.getText()"', '"+tanggal+"')";
-                    smt.executeUpdate(sql); 
-                } catch (SQLException ex) {
-                    Logger.getLogger(mencoba.class.getName()).log(Level.SEVERE, null, ex);
-                }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void tftglActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tftglActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(this, "Selamat Datang");   
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_tftglActionPerformed
+
+    private void text5KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_text5KeyTyped
+        // TODO add your handling code here:
+         if(!Character.isDigit(evt.getKeyChar())){
+            evt.consume();
+        }
+    }//GEN-LAST:event_text5KeyTyped
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+       try {
+            java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost/tugas_akhir", "root", "");
+      
+           String sql = "UPDATE pemakaian_lab set tgl_keluar = ? where id = ?";
+           PreparedStatement prep = con.prepareStatement(sql);
+           prep.setString(1, mencoba.now());
+           prep.setInt(2, id);
+           prep.executeUpdate();
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(mencoba.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        // TODO add your handling code here:
+        int jawab = JOptionPane.showOptionDialog(this, 
+                    "Ingin Keluar?", 
+                    "Keluar", 
+                    JOptionPane.YES_NO_OPTION, 
+                    JOptionPane.QUESTION_MESSAGE, null, null, null);
+    
+    if(jawab == JOptionPane.YES_OPTION){
+        JOptionPane.showMessageDialog(this, "Program akan Keluar");
+        System.exit(0);
+    }
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void cbNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbNamaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbNamaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -244,28 +384,63 @@ public class mencoba extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new mencoba().setVisible(true);
+                
+                
+                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox cbNama;
     private javax.swing.JButton jButton1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField text1;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTextField text2;
-    private javax.swing.JTextField text3;
     private javax.swing.JTextField text4;
+    private javax.swing.JTextField text5;
+    private javax.swing.JTextField tftgl;
     // End of variables declaration//GEN-END:variables
 
     private void setIcon() {
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("laptop.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("Elabs.jpg")));
     }
+    
+    public static String now() {
+    String tampilan = "yyyy-MM-dd HH:mm:ss" ;
+    Calendar cal = Calendar.getInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat(tampilan);
+    return sdf.format(cal.getTime());
+
+  }
+//
+//  private void setModel() {
+//        try {
+//            java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost/tugas_akhir", "root", "");
+//        Statement st = con.createStatement();
+//            ResultSet rs = st.executeQuery("select id , nama from lab");
+//            while(rs.next()){
+//      //  ComboBox.addItem(getString)
+//            }
+//        } catch (Exception e){
+//        e.printStackTrace();
+//        }
+//}
+
+   
 }
+
+
+

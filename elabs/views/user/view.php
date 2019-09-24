@@ -74,5 +74,57 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
         ]) ?>
-  </div>
+ 
 <?php endif ?>
+<?php if (User::isDosenStaf()): ?>
+    
+<?php $this->title = $model->username; ?>
+
+ <div class="box-header">
+        <h3 class="box-title">Profile Dosen <?= $model->username; ?>.</h3>
+    </div>
+
+    <div class="box-body box box-primary">
+        <p>
+            <?= Html::a('<i class="fa fa-pencil"> Edit</i>', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        </p>
+
+        <?= DetailView::widget([
+            'model' => $model,
+            'attributes' => [
+                'username',
+                [
+                    'attribute' => 'nama',
+                    'value' => function($data) {
+                        return $data->dosenStaf->nama;
+                    }
+                ],
+                [
+                    'attribute' => 'nik',
+                    'value' => function($data) {
+                        return $data->dosenStaf->nik;
+                    }
+                ],
+                [
+                    'attribute' => 'nidn',
+                    'value' => function($data) {
+                        return $data->dosenStaf->nidn;
+                    }
+                ],
+                [
+                    'attribute' => 'nip',
+                    'value' => function($data) {
+                        return $data->dosenStaf->nip;
+                    }
+                ],
+                 [
+                    'attribute' => 'jabatan',
+                    'value' => function($data) {
+                        return $data->dosenStaf->jabatan;
+                    }
+                ],
+            ],
+        ]) ?>
+ 
+<?php endif ?>
+ </div>

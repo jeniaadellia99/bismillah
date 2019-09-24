@@ -19,9 +19,6 @@ $this->params['breadcrumbs'][] = 'Update';
 	    <?= $this->render('_form', [
 	        'model' => $model,
 	    ]) ?>
-
-	
-
 </div>
 
    <?php endif ?>
@@ -33,7 +30,15 @@ $this->params['breadcrumbs'][] = 'Update';
 	    <?= $this->render('_form', [
 	        'model' => $model,
 	    ]) ?>
+</div>
+<?php endif ?>
 
+<?php if (User::isDosenStaf()): ?>
 
+<div class="user-update box box-primary">
+
+	    <?= $this->render('_form', [
+	        'model' => $model,
+	    ]) ?>
 </div>
 <?php endif ?>

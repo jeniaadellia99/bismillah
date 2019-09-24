@@ -40,6 +40,26 @@ class PeminjamanSearch extends Peminjaman
      *
      * @return ActiveDataProvider
      */
+    public function getQuerySearch($params)
+    {
+        $query = PeminjamanSearch::find();
+
+        $this->load($params);
+
+        // add conditions that should always apply here
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'id_mhs' => $this->id_mhs,
+            'id_dosen_staf' => $this->id_dosen_staf,
+            'tgl_pinjam' => $this->tgl_pinjam,
+            'keterangan' => $this->keterangan,
+            'status' => $this->status,
+        ]);
+
+        return $query;
+    }
     public function search($params)
     {
          if (Yii::$app->user->identity->id_user_role == 1) {
@@ -79,6 +99,11 @@ class PeminjamanSearch extends Peminjaman
            $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+     if (Yii::$app->user->identity->id_user_role == 3) {
+          $query = Peminjaman::find()->andWhere(['id_dosen_staf' => Yii::$app->user->identity->id_dosen_staf]);
+           $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
 
         $this->load($params);
 
@@ -103,4 +128,5 @@ class PeminjamanSearch extends Peminjaman
         return $dataProvider;
     }
     }
+}
 }

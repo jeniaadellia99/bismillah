@@ -29,8 +29,8 @@ class Peminjaman extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_mhs', 'keterangan', 'status', 'tgl_pinjam'], 'required'],
-            [['id_dosen_staf', 'id_inventaris_brg', 'status'], 'integer'],
+            [['id_mhs', 'keterangan', 'status', 'tgl_pinjam', 'id_dosen_staf'], 'required'],
+            [['id_inventaris_brg', 'status'], 'integer'],
             [['keterangan'], 'string', 'max' => 255],
               [['tgl_pinjam', 'tgl_kembali'], 'safe'],
         ];
@@ -44,11 +44,11 @@ class Peminjaman extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'id_inventaris_brg' => 'Nama Barang',
-            'id_mhs' => 'Nama Mahasiswa',
-            'id_dosen_staf' => 'Dosen/Staff',
+            'id_mhs' => 'Nama',
+            'id_dosen_staf' => 'Nama',
             'keterangan' => 'Keterangan',
             'tgl_pinjam' => 'Tanggal Pinjam',
-            'tgl_kembali' => 'Tanggal Kembali',
+            'tgl_kembali' => 'Rencana Tanggal Kembali',
             'status' => 'Status',
             // 'id_detail_pinjam' => 'Detail Pinjam'
         ];
@@ -65,7 +65,7 @@ class Peminjaman extends \yii\db\ActiveRecord
     // }
     public function getDetailPinjam()
     {
-        return $this->hasOne(InventarisBrg::className(), ['id' => 'jumlah']);
+        return $this->hasOne(DetailPinjam::className(), ['id_detail_pinjam' => 'id']);
     }
     public function getDosenStaf()
     {
@@ -126,14 +126,42 @@ class Peminjaman extends \yii\db\ActiveRecord
             ->orderBy(['id_inventaris_brg' => SORT_ASC])
             ->all();
     }
-      public function getJumlahBarangPinjam()
-    {
-        return DetailPinjam::find()
-            ->andWhere(['id_inventaris_brg' => $this->id])
-            ->count();
-    }
+    //   public function getJumlahBarangPinjam()
+    // {
+    //     // return DetailPinjam::find()
+    //     //     ->andWhere(['id_inventaris_brg' => $this->id])
+    //     //     ->count();
+    //     return $this->hasOne();
+    // }
     public function getInventarisBrg()
     {
         return $this->hasOne(InventarisBrg::className(), ['id' => 'id_inventaris_brg']);
+    }
+    public static function getSelisihTanggal($tgl_pinjam, $tgl_kembali, $key = 'd')
+    {
+        $tgl_pinjam  = date_create($tgl_pinjam);
+        $tgl_kembali = date_create($tgl_kembali); /*->modify('+1 day');*/ //Tangal sekarang +1 hari
+        
+        $diff  = date_diff($tgl_pinjam, $tgl_kembali);
+        
+        switch ($key) {
+            case 'y':
+                return $diff->format('%a');
+                break;
+            case 'm':
+                return $diff->format('%a');
+                break;
+            case 'd':
+                return $diff->format('%a');
+                break;
+            default:
+                return $diff->format('%a');
+                break;
+        }
+    }
+
+    public function getSelisih()
+    {
+        return $this->getSelisihTanggal($this->tgl_kembali, date('Y-m-d'));
     }
 }

@@ -66,6 +66,7 @@ class InventarisBrgController extends Controller
     public function actionCreate()
     {
         $model = new InventarisBrg();
+       
         
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $foto = UploadedFile::getInstance($model, 'foto');

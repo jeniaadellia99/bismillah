@@ -36,6 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
              [
               
+                'attribute' => 'kode_brg',
+                'headerOptions' => ['style' => 'text-align:center'],
+            ],
+              [
+              
                 'attribute' => 'nama_brg',
                 'headerOptions' => ['style' => 'text-align:center'],
             ],

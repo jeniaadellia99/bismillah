@@ -27,8 +27,8 @@ class DetailPinjam extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_pinjam', 'id_inventaris_brg', 'jumlah'], 'required'],
-            [['id_pinjam', 'id_inventaris_brg', 'jumlah'], 'integer'],
+        [['id_pinjam', 'id_inventaris_brg', 'jumlah'], 'required'],
+        [['id_pinjam', 'id_inventaris_brg', 'jumlah', 'status'], 'integer'],
         ];
     }
 
@@ -40,15 +40,16 @@ class DetailPinjam extends \yii\db\ActiveRecord
         return [
             'id_detail_pinjam' => 'Detail Pinjam',
             'id_pinjam' => 'Pinjam',
-            'id_inventaris_brg' => 'Inventaris Brg',
+            'id_inventaris_brg' => 'Pilih Barang',
             'Jumlah' => 'Jumlah Barang',
+            'status' => 'Status',
         ];
     }
     public function getInventarisBrg()
     {
         return $this->hasOne(InventarisBrg::className(), ['id' => 'id_inventaris_brg']);
     }
-     public function getPeminjaman()
+    public function getPeminjaman()
     {
         return $this->hasOne(Peminjaman::className(), ['id' => 'id_pinjam']);
     }
@@ -63,5 +64,9 @@ class DetailPinjam extends \yii\db\ActiveRecord
     public function getNamaBarang()
     {
         return InventarisBrg::find()->all();
+    }
+    public function getJumlahBrg()
+    {
+        return InventarisBrg::find()->sum('jumlah_brg');
     }
 }

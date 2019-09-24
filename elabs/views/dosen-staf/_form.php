@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use kartik\file\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\DosenStaf */
@@ -35,9 +36,21 @@ use yii\bootstrap\ActiveForm;
 
     <?= $form->field($model, 'nik')->textInput() ?>
 
-    <?= $form->field($model, 'nama')->textArea() ?>
+    <?= $form->field($model, 'nama')->textInput() ?>
 
     <?= $form->field($model, 'jabatan')->textInput() ?>
+
+     <?= $form->field($model, 'foto')->widget(FileInput::classname(), [
+        'options' => ['accept' => 'upload/*'],
+        'pluginOptions'=>[
+            'allowedFileExtensions'=>['jpg', 'png'],
+            'showUpload' =>true,
+            'initialPreview' => [
+                $model->foto ? Html::img($model->foto):null,
+            ],
+            'overwriteInitial'=>false,
+        ],
+    ]); ?>
     
 
    <!--  -->

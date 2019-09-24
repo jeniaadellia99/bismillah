@@ -30,13 +30,10 @@ class DosenStaf extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'jabatan'], 'required'],
-            [['nidn', 'nip', 'nik'], 'string', 'max' => 16],
+            [['nama', 'jabatan', 'nip', 'nidn', 'nik'], 'required'],
+            [['nidn', 'nip', 'nik'], 'string', 'max' => 100],
             [['nama', 'jabatan'], 'string', 'max' => 255],
-            // [['nik'],'match', 'pattern' => '/^[0-15-+]\w*$/i','message' => '*NIK terdiri dari 16 digit'],
-            // [['agama'], 'string', 'max' => 12],
-            // [['telepon'], 'string', 'max' => 13],
-            ['nik', 'match', 'pattern' => '/((\+[0-9]{6})|0)[-]?[0-9]{7}/', 'message' => 'NIK diisi maksimal 16 digit'],
+            [['foto'], 'file', 'extensions' => 'png, jpg, jpeg']
         ];
 
     }
@@ -53,6 +50,7 @@ class DosenStaf extends \yii\db\ActiveRecord
             'nik' => 'NIK',
             'nama' => 'Nama',
             'jabatan' => 'Jabatan',
+            'foto' => 'Foto',
         ];
     }
 

@@ -34,7 +34,7 @@ use kartik\date\DatePicker;
 
     <?= $form->field($model, 'nama_pengguna')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'nama_lab')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'id_lab')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'mata_kuliah')->textInput(['maxlength' => true]) ?>
 

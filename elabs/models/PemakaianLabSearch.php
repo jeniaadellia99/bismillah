@@ -18,7 +18,7 @@ class PemakaianLabSearch extends PemakaianLab
     {
         return [
             [['id'], 'integer'],
-            [['nama_pengguna', 'nama_lab', 'mata_kuliah', 'date'], 'safe'],
+            [['nama_pengguna', 'id_lab', 'mata_kuliah', 'date'], 'safe'],
         ];
     }
 
@@ -50,7 +50,7 @@ class PemakaianLabSearch extends PemakaianLab
         $query->andFilterWhere([
             'id' => $this->id,
             'nama_pengguna' => $this->nama_pengguna,
-            'nama_lab' => $this->nama_lab,
+            'id_lab' => $this->id_lab,
             'mata_kuliah' => $this->mata_kuliah,
             'date' => $this->date,
         ]);
@@ -81,7 +81,7 @@ class PemakaianLabSearch extends PemakaianLab
         ]);
 
         $query->andFilterWhere(['like', 'nama_pengguna', $this->nama_pengguna])
-                ->andFilterWhere(['like', 'nama_lab', $this->nama_lab])
+            ->andFilterWhere(['like', 'id_lab', $this->id_lab])
             ->andFilterWhere(['like', 'mata_kuliah', $this->mata_kuliah])
             ->andFilterWhere(['like', 'date', $this->date]);
 

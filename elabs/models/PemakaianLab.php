@@ -35,7 +35,7 @@ class PemakaianLab extends \yii\db\ActiveRecord
             [['id'], 'integer'],
             // [['waktu_mulai', 'waktu_selesai'], 'safe'],
             [['nama_lab', 'nama_pengguna'], 'string', 'max' => 255],
-            [['date'], 'safe'],
+            [['date', 'tgl_keluar'], 'safe'],
         ];
     }
 
@@ -48,9 +48,10 @@ class PemakaianLab extends \yii\db\ActiveRecord
             'id' => 'ID',
             // 'id_mhs' => 'id mahasiswa',
             'nama_pengguna' => 'Nama Pengguna',
-            'nama_lab' => 'Nama Laboratorium',
+            'id_lab' => 'Nama Laboratorium',
             'mata_kuliah' => 'Mata Kuliah',
-            'date' => 'Tanggal',
+            'date' => 'Waktu Masuk',
+            'tgl_keluar' => 'Waktu Keluar',
             // 'waktu_mulai' => 'Waktu Mulai',
             // 'waktu_selesai' => 'Waktu Selesai',
             // 'keterangan' => 'Keterangan',
@@ -60,6 +61,9 @@ class PemakaianLab extends \yii\db\ActiveRecord
     {
         return static::find()->count();
     }
-
+    public function getLab()
+    {
+        return $this->hasOne(Lab::className(), ['id' => 'id_lab']);
+    }
 
 }

@@ -114,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-6">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Grafik Peminjaman Berdasarkan Barang</h3>
+                    <h3 class="box-title">Grafik Peminjaman</h3>
                 </div>
                 <div class="box-body">
                     <?= \miloschuman\highcharts\Highcharts::widget([
@@ -145,7 +145,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        Daftar Peminjaman belum komfirmasi
+                        Daftar Peminjaman belum konfirmasi
                     </h3>
                 </div>
                 <div class="box-body table no-padding">
@@ -154,8 +154,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             <tr>
                                 <th width="55px" class="text-center" rowspan="2">NO</th>
                                 <th class="text-center" rowspan="2">Nama Peminjam</th>
-                                 <th class="text-center" rowspan="2">Barang</th>
+                                <th class="text-center" rowspan="2">Barang</th>
                                 <th class="text-center" rowspan="2">tanggal pinjam</th>
+                                <th class="text-center" rowspan="2">Keterangan</th>
                                 <th class="text-center" rowspan="2">Aksi</th>
                             </tr>
                 </thead>
@@ -164,11 +165,17 @@ $this->params['breadcrumbs'][] = $this->title;
                             <?php foreach (Peminjaman::find()->andWhere(['status' => 1])->orderBy(['tgl_pinjam' =>  SORT_DESC])->limit(10)->all() as $peminjam): ?>
                             <tr>
                                 <td class="text-center"><?= $i++ ?></td>
+                                <?php if ($peminjam->mhs) { ?>
                                 <td class="text-center"><?= $peminjam->mhs->nama ?></td>
+                            <?php } ?>
+                            <?php if ($peminjam->dosenStaf) { ?>
+                                <td class="text-center"><?= $peminjam->dosenStaf->nama ?></td>
+                            <?php } ?>
                                  <td class="text-center"><?= Html::a('<i class="fa fa-check-square-o">Detail Barang</i>', ['peminjaman/view', 'id' => $peminjam->id]); ?>
                                 </td>
                                 
                                 <td class="text-center"><?= $peminjam->tgl_pinjam ?></td>
+                                 <td class="text-center"><?= $peminjam->keterangan ?></td>
                                 <td class="text-center"><?= Html::a('<i class="fa fa-check-square-o">Konfirmasi</i>', ['peminjaman/acc-barang', 'id' => $peminjam->id], ['data' => ['confirm' => 'Apa anda yakin ingin menyutujui peminjaman ini?'],]); ?>
                                 </td>
                             </tr>
@@ -186,7 +193,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php endif ?>
 
-<?php if (User::isMhs()): ?>
+<?php if (User::isMhs() || User::isDosenStaf()): ?>
     <!-- CARIII -->
   
     <div class="row">
@@ -196,7 +203,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h3 class="box-title">Pencarian Barang</h3>
             </div>
             <div class="box-body">
-                <?= $this->render('_search', ['model' => $searchModel]); ?>
+                <?= $this->render('_search', [
+                    'model' => $searchModel,
+                    // 'id_pinjam' => $id_pinjam,
+                ]); ?>
             </div>
         </div>
     </div>
@@ -211,22 +221,23 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="box-header with-border">
                     <div class="user-block">
-                        <img class="img-circle"  <?= User::getFotoMhs(['class' => 'user-image']); ?> 
+
+                        <img class="img-circle"<?= "dsjnfndsj"; ?> 
                         <span class="username"><?= Html::a($inventarisBrg->nama_brg, ['inventaris_brg/view', 'id' => $inventarisBrg->id]); ?></span>
                     </div>
                     <div class="box-tools">
+
                         <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Mark as read"><i class="fa fa-circle-o"></i></button>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div>
                 </div>
-
                 <div class="box-body">
                     <center>
                         <img style="height: 300px" class="img-responsive pad" src="<?= Yii::$app->request->baseUrl.'/upload/barang/'.$inventarisBrg['foto']; ?>" alt="Photo">
                     </center>
                     <?= Html::a("<i class='fa fa-eye'> Detail Barang</i>",['inventaris-brg/view','id'=>$inventarisBrg->id],['class' => 'btn btn-default']) ?>
-                    <?= Html::a('<i class="fa fa-file"> Pinjam Barang</i>', ['detail-pinjam/create', 'id_inventaris_brg' => $inventarisBrg->id], ['class' => 'btn btn-primary',
+                    <?= Html::a('<i class="fa fa-file"> Pinjam Barang</i>', ['detail-pinjam/create', 'id_inventaris_brg' => $inventarisBrg->id, 'id_pinjam' => $id_pinjam], ['class' => 'btn btn-primary',
                         'data' => [
                             'confirm' => 'Yakin ingin meminjam barang ini?',
                         ],

@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\PemakaianLab */
 
-$this->title = "Nama Pengguna: "$model->nama_pengguna;
+$this->title = "Nama Pengguna: ".$model->nama_pengguna;
 $this->params['breadcrumbs'][] = ['label' => 'Pemakaian Labs', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -28,11 +28,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            
+            'no_komputer',
             'nama_pengguna',
-            'nama_lab',
+             [
+            'attribute' => 'id_lab',
+            'value' => @$model->lab->nama,
+            ],
             'mata_kuliah',
             'date',
+            'tgl_keluar',
         ],
     ]) ?>
 

@@ -149,7 +149,7 @@ class UserController extends Controller
             $user->password = Yii::$app->getSecurity()->generatePasswordHash($model->password);
             $user->save(false);
 
-            return $this->redirect(['site/dashboard']);
+            return $this->redirect(['site/about']);
         }
      
         return $this->render('changePassword', [
